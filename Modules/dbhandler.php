@@ -4,7 +4,7 @@ class dbhandler {
 	// For security we can store these information outside the document
 	// root but for simplicity we just store it here for now.
 	private static $username = "root";
-	private static $password = "CHENxi0810";
+	private static $password = "789789789";
 	private static $server = "localhost";
 	private static $database = "testProject";
 
