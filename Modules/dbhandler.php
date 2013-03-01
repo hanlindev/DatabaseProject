@@ -5,8 +5,8 @@ class dbhandler {
 	// root but for simplicity we just store it here for now.
 	private static $username = "root";
 	private static $password = "CHENxi0810";
-	private static $server = localhost;
-	private static $database = "hotel";
+	private static $server = "localhost";
+	private static $database = "testProject";
 
 
 	/**
@@ -21,13 +21,14 @@ class dbhandler {
 	 * public methods instead.
 	 */
 	private static function sendQuery($queryContent) {
-		$mysqli = new mysqli($server, $username, $password, $database);
+		$mysqli = new mysqli(dbhandler::$server, dbhandler::$username, dbhandler::$password, dbhandler::$database);
 		if ($mysqli->connect_error) {
 			die('Connect error ('.$mysqli->connect_errno.') '.$mysqli->connect_error);
 		}
 		$queryResult = $mysqli->query($queryContent);
 		$mysqli->close();
-		return $queryResult;
+		//return $queryResult;
+		return $queryContent;//for debugging
 	}
 
 	/**
@@ -45,11 +46,11 @@ class dbhandler {
 		$queryContent = "INSERT INTO $tableName VALUES(";
 		$comma = "";
 		foreach ($rowInfo as $info) {
-			$queryContent .= $comma.$info;
+			$queryContent .= $comma.'\''.$info.'\'';
 			$comma = ",";
 		}
 		$queryContent .= ");";
-		return sendQuery($queryContent);
+		return dbhandler::sendQuery($queryContent);
 	}
 
 	/**
@@ -72,8 +73,8 @@ class dbhandler {
 	 * public interface to insert a row into hotel table
 	 */
 	public static function insertIntoHotel($name, $location, $star, $swimming_pool, $fitness_club, $buffet_restaurant, $restaurant) {
-		$rowInfo = generateRowInfoArray($name, $location, $star, $swimming_pool, $fitness_club, $buffet_restaurant, $restaurant);
-		return insertIntoTable("hotel", $rowInfo);
+		$rowInfo = dbhandler::generateRowInfoArray($name, $location, $star, $swimming_pool, $fitness_club, $buffet_restaurant, $restaurant);
+		return dbhandler::insertIntoTable("hotel", $rowInfo);
 	}
 
 	public static function testClass($username, $password) {
