@@ -1,0 +1,2 @@
+INSERT INTO reserve VALUES('0000001', 1, 1, 3, 1, 1);
+INSERT INTO reserve VALUES('0000001', 1, 2, 3, 1, 1);

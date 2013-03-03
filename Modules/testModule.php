@@ -3,6 +3,14 @@
 	<h1>Login Status</h1>
 	<?php
 	require 'dbhandler.php';
+
+
+	/*
+	$email = "'".$_POST['email']."'";
+	$password = "'".$_POST['password']."'";
+	$realname = "'".$_POST['realname']."'";
+	$result = dbhandler::insertIntoUser($email, $password, $realname, 0);
+	*/
 	/*
 	$username = $_POST['username'];
 	$password = $_POST['password'];
@@ -34,6 +42,8 @@
 	dbhandler::deleteFromHotel($constraints);
 	echo "<p> $querycontent</p>";
 	*/
+	
+	/*
 	$hotelid = $_POST['hotelid'];
 	$roomclass = $_POST['roomclass'];
 	$bedsize = $_POST['bedsize'];
@@ -41,7 +51,20 @@
 	$roomdesc = '\''.$_POST['roomdesc'].'\'';
 	$roomcount = $_POST['roomcount'];
 	$result = dbhandler::insertIntoFacility($hotelid, $roomclass, $bedsize, $nobed, $roomdesc, $roomcount);
+	*/
+
+
+	$hotelid = $_POST['hotelid'];
+	$roomclass = $_POST['roomclass'];
+	$bedsize = $_POST['bedsize'];
+	$nobed = $_POST['nobed'];
+	$roomdesc = '\''.$_POST['roomdesc'].'\'';
+	$email = "'".$_POST['email']."'";
+	$result = dbhandler::insertIntoBooking("'123321'", $email, "'20130201'", "'20130210'", "'successful'");
+	
+	//$result = dbhandler::updateHotel("star=4", "hotelname='Hotel China' AND star=5");
 	echo "<p> $result </p>";
 	?>
+	<a href="../index.html">Back</a>
 </body>
 </html>

@@ -139,7 +139,7 @@ class dbhandler {
 	 */
 	public static function insertIntoBooking($ref, $uid, $checkin, $checkout, $status) {
 		$attrList = dbhandler::generateRowInfoArray("ref", "uid", "checkin", "checkout", "status");
-		$rowInfo = dbhandler::generateRowInfoArray($ref, $uid, $hotelid, $checkin, $checkout, $status);
+		$rowInfo = dbhandler::generateRowInfoArray($ref, $uid, $checkin, $checkout, $status);
 		return dbhandler::insertIntoTable("booking", $attrList, $rowInfo);
 	}
 
@@ -159,22 +159,17 @@ class dbhandler {
 	/**
 	 * deleteFromTable
 	 * @param $tableName is the table from which we delete the row
-	 * @param $constraints are conditions added to the WHERE close. It should be an
-	 *        ASSOCIATIVE ARRAY. The keys are attribute names and values are constraints
-	 *        in their full format. Eg if a constraint is checkin > '18-April-1991', the
-	 *        entry in the array should be "checkin"=>"checkin > '18-April-1991'". NOTE:
-	 *        don't forget the single quotes in the constraint.
+	 * @param $where is the constraint of the delete query. For example if we want to delete
+	 *        all rows whose value attribute is greater than 1 but smaller than 10, you should
+	 *        pass "value > 1 AND value < 1". Don't forget the single quote enclosing string
+	 *        values. Eg if delete rows whose name is 'good job', you should pass in
+	 *        "name = \'good job\'".
 	 * @return result returned by the query
-	 * Deletes a row from the specified table whose properties match the constraints
+	 * Deletes a row from the specified table whose properties match the constraints. The
+	 * user of his code is responsible to write correct constraints.
 	 */
-	private static function deleteFromTable($tableName, $constraints) {
-		$queryContent = "DELETE FROM $tableName WHERE ";
-		$comma = "";
-		foreach ($constraints as $attr_name=>$constraint) {
-			$queryContent .= $comma . $constraint;
-			$comma = ",";
-		}
-		$queryContent .= ";";
+	private static function deleteFromTable($where) {
+		$queryContent = "DELETE FROM $tableName WHERE $where;";
 		return dbhandler::sendQuery($queryContent);
 	}
 
@@ -204,5 +199,106 @@ class dbhandler {
 	public static function deleteFromReserve($constraints) {
 		return dbhandler::deleteFromTable("reserve", $constraints);
 	}
+
+	//--------------------------Modify Query-------------------------------------------
+	/**
+	 * updateTable
+	 * @param $tableName the table we want to update
+	 * @param $set the value we want to pass to the set close
+	 * @param $where the value we want to pass to the where close
+	 * Example: if the query looks like:
+	 *    UPDATE student
+	 *    SET departmet='Computer Science'
+	 *    WHERE department='CS';
+	 * Then $test should be "department='Computer Science'" and $where should be
+	 * "department='CS'"
+	 */
+	private static function updateTable($tableName, $set, $where) {
+		$queryContent = "UPDATE $tableName SET $set WHERE $where;";
+		return dbhandler::sendQuery($queryContent);
+	}
+
+	/** 
+	 * updateHotel
+	 * @param $set is the content of the set close
+	 * @param $where is the content of the where close
+	 * @return the result of the query returned by the server
+	 * Example: if the query looks like:
+	 *    UPDATE student
+	 *    SET departmet='Computer Science'
+	 *    WHERE department='CS';
+	 * Then $test should be "department='Computer Science'" and $where should be
+	 * "department='CS'"
+	 */
+	public static function updateHotel($set, $where) {
+		return dbhandler::updateTable("hotel", $set, $where);
+	}
+
+	/** 
+	 * updateFacility
+	 * @param $set is the content of the set close
+	 * @param $where is the content of the where close
+	 * @return the result of the query returned by the server
+	 * Example: if the query looks like:
+	 *    UPDATE student
+	 *    SET departmet='Computer Science'
+	 *    WHERE department='CS';
+	 * Then $test should be "department='Computer Science'" and $where should be
+	 * "department='CS'"
+	 */
+	public static function updateFacility($set, $where) {
+		return dbhandler::updateTable("user", $set, $where);
+	}
+
+	/** 
+	 * updateUser
+	 * @param $set is the content of the set close
+	 * @param $where is the content of the where close
+	 * @return the result of the query returned by the server
+	 * Example: if the query looks like:
+	 *    UPDATE student
+	 *    SET departmet='Computer Science'
+	 *    WHERE department='CS';
+	 * Then $test should be "department='Computer Science'" and $where should be
+	 * "department='CS'"
+	 */
+	public static function updateUser($set, $where) {
+		return dbhandler::updateTable("user", $set, $where);
+	}
+
+	/** 
+	 * updateBooking
+	 * @param $set is the content of the set close
+	 * @param $where is the content of the where close
+	 * @return the result of the query returned by the server
+	 * Example: if the query looks like:
+	 *    UPDATE student
+	 *    SET departmet='Computer Science'
+	 *    WHERE department='CS';
+	 * Then $test should be "department='Computer Science'" and $where should be
+	 * "department='CS'"
+	 */
+	public static function updateBooking($set, $where) {
+		return dbhandler::updateTable("booking", $set, $where);
+	}
+
+	/** 
+	 * updateReserve
+	 * @param $set is the content of the set close
+	 * @param $where is the content of the where close
+	 * @return the result of the query returned by the server
+	 * Example: if the query looks like:
+	 *    UPDATE student
+	 *    SET departmet='Computer Science'
+	 *    WHERE department='CS';
+	 * Then $test should be "department='Computer Science'" and $where should be
+	 * "department='CS'"
+	 * Well the only thing modifiable here is the count~~
+	 */
+	public static function updateReserve($set, $where) {
+		return dbhandler::updateTable("reserve", $set, $where);
+	}
+
+
 }
 ?>

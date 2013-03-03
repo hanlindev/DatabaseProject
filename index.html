@@ -5,9 +5,13 @@
 <body>
 	<p>Hello world!</p>
 	<form action="Modules/testModule.php" method="POST">
-		Username: <input id="username" type="text" name="username"><br>
+		Email: <input id="username" type="text" name="email"><br>
 		Password: <input id="password" type="text" name="password"><br>
-		Name: <input type="text" name="name"><br>
+		Readl Name: <input type="text" name="realname"><br>
+		<input type="submit" value="Submit">
+	</form>
+	<form action="Modules/testModule.php" method="POST">
+		Hotel Name: <input type="text" name="name"><br>
 		Location: <input type="text" name="location"><br>
 		Star: <input type="text" name="star"><br>
 		Sustainable Certified: <input type="hidden" name="sustain" value="0">
@@ -70,6 +74,28 @@
 		Number of beds: <input type="text" name="nobed"><br>
 		Room Description: <input type="text" name="roomdesc"><br>
 		Room Count: <input type="text" name="roomcount"><br>
+		<input type="submit" value="Submit">
+	</form>
+
+	<form action="Modules/testModule.php" method="POST">
+		Hotel ID: <input type="text" name="hotelid"><br>
+		Room Class: <select name="roomclass">
+						<option value="1">Standard</option>
+						<option value="2">Superior</option>
+						<option value="3">Deluxe</option>
+						<option value="4">Executive</option>
+						<option value="5">Presidential</option>
+					</select><br>
+		Bed Size: <select name="bedsize">
+						<option value="1">Single</option>
+						<option value="2">Double</option>
+						<option value="3">Queen</option>
+						<option value="4">Olympic Queen</option>
+						<option value="5">King</option>
+						<option value="6">California King</option>
+					</select><br>
+		Number of beds: <input type="text" name="nobed"><br>
+		Email: <input type="text" name="email"><br>
 		<input type="submit" value="Submit">
 	</form>
 </body>

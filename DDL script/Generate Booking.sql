@@ -1,0 +1,1 @@
+INSERT INTO booking VALUES('0000001', 'a0000001@abc.com', 'successful', '20130201', '20130210');
