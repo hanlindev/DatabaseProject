@@ -260,7 +260,7 @@ class dbhandler {
 	 * Then $test should be "department='Computer Science'" and $where should be
 	 * "department='CS'"
 	 */
-	private static function updateTable($tableName, $set, $where) {
+	private function updateTable($tableName, $set, $where) {
 		$queryContent = "UPDATE $tableName SET $set WHERE $where;";
 		return $this->queueQuery($queryContent);
 	}
@@ -277,7 +277,7 @@ class dbhandler {
 	 * Then $test should be "department='Computer Science'" and $where should be
 	 * "department='CS'"
 	 */
-	public static function updateHotel($set, $where) {
+	public function updateHotel($set, $where) {
 		return $this->updateTable("hotel", $set, $where);
 	}
 
@@ -293,7 +293,7 @@ class dbhandler {
 	 * Then $test should be "department='Computer Science'" and $where should be
 	 * "department='CS'"
 	 */
-	public static function updateFacility($set, $where) {
+	public function updateFacility($set, $where) {
 		return $this->updateTable("user", $set, $where);
 	}
 
@@ -309,7 +309,7 @@ class dbhandler {
 	 * Then $test should be "department='Computer Science'" and $where should be
 	 * "department='CS'"
 	 */
-	public static function updateUser($set, $where) {
+	public function updateUser($set, $where) {
 		return $this->updateTable("user", $set, $where);
 	}
 
@@ -325,7 +325,7 @@ class dbhandler {
 	 * Then $test should be "department='Computer Science'" and $where should be
 	 * "department='CS'"
 	 */
-	public static function updateBooking($set, $where) {
+	public function updateBooking($set, $where) {
 		return $this->updateTable("booking", $set, $where);
 	}
 
@@ -342,11 +342,21 @@ class dbhandler {
 	 * "department='CS'"
 	 * Well the only thing modifiable here is the count~~
 	 */
-	public static function updateReserve($set, $where) {
+	public function updateReserve($set, $where) {
 		return $this->updateTable("reserve", $set, $where);
 	}
 
+	//----------------------Select Queries--------------------------------------
+	/**
+	 * selectFromTable
+	 * this is too usage-oriented so no specialized method
+	 */
+	public function selectFromTable($select, $from, $where, $groupby) {
+		$queryContent = "SELECT $select FROM $from WHERE $where GROUP BY $groupby";
+		return $this->queueQuery($queryContent);
+	}
 
-
+	//----------------------Useful functions------------------------------------
+	public function searchHotel($)
 }
 ?>
