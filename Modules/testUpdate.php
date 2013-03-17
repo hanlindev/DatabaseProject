@@ -5,8 +5,8 @@
 	require 'dbhandler.php';
 
 	$dbh = new dbhandler();
-	$result = dbhandler::updateHotel("star=4", "hotelname='Hotel China' AND star=5");
-	echo "<p> $result </p>";
+	$result = $dbh->updateHotel("star=4", "hotelname='Hotel China' AND star=5");
+	$dbh->sendQuery();
 	?>
 	<a href="../index.html">Back</a>
 </body>

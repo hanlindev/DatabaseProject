@@ -4,13 +4,13 @@
 </head>
 <body>
 	<p>Hello world!</p>
-	<form action="Modules/testModule.php" method="POST">
+	<form action="Modules/testInsertUser.php" method="POST">
 		Email: <input id="username" type="text" name="email"><br>
 		Password: <input id="password" type="text" name="password"><br>
-		Readl Name: <input type="text" name="realname"><br>
+		Real Name: <input type="text" name="realname"><br>
 		<input type="submit" value="Submit">
 	</form>
-	<form action="Modules/testModule.php" method="POST">
+	<form action="Modules/testInsertHotel.php" method="POST">
 		Hotel Name: <input type="text" name="name"><br>
 		Location: <input type="text" name="location"><br>
 		Star: <input type="text" name="star"><br>
@@ -49,12 +49,12 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<form action="Modules/testModule.php" method="POST">
+	<form action="Modules/testDeleteHotel.php" method="POST">
 		Hotel Name: <input type="text" name="hotelname"><br>
 		<input type="submit" value="Delete This hotel">
 	</form>
 
-	<form action="Modules/testModule.php" method="POST">
+	<form action="Modules/testInsertFacility.php" method="POST">
 		Hotel ID: <input type="text" name="hotelid"><br>
 		Room Class: <select name="roomclass">
 						<option value="1">Standard</option>
@@ -77,7 +77,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-	<form action="Modules/testModule.php" method="POST">
+	<form action="Modules/testInsertBooking.php" method="POST">
 		Hotel ID: <input type="text" name="hotelid"><br>
 		Room Class: <select name="roomclass">
 						<option value="1">Standard</option>
@@ -96,6 +96,10 @@
 					</select><br>
 		Number of beds: <input type="text" name="nobed"><br>
 		Email: <input type="text" name="email"><br>
+		<input type="submit" value="Submit">
+	</form>
+
+	<form action="Modules/testUpdate.php" method="POST">
 		<input type="submit" value="Submit">
 	</form>
 </body>

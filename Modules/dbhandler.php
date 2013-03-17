@@ -3,11 +3,16 @@
 class dbhandler {
 	// For security we can store these information outside the document
 	// root but for simplicity we just store it here for now.
-	private static $username = "root";
-	private static $password = "789789789";
-	private static $server = "localhost";
-	private static $database = "CS2102";
+	private static $username = 'root';
+	private static $password = '789789789';
+	private static $server = 'localhost';
+	private static $database = 'CS2102';
 
+	private $queryQueue;
+
+	function __construct() {
+		$this->queryQueue = array();
+	}
 
 	/**
 	 * sendQuery
@@ -20,7 +25,7 @@ class dbhandler {
 	 * you should not use this to send your query directly. Use the
 	 * public methods instead.
 	 */
-	private static function sendQuery($queryContent) {
+	public function sendQuery($queryContent) {
 		$mysqli = new mysqli(dbhandler::$server, dbhandler::$username, dbhandler::$password, dbhandler::$database);
 		if ($mysqli->connect_error) {
 			die('Connect error ('.$mysqli->connect_errno.') '.$mysqli->connect_error);
@@ -29,6 +34,52 @@ class dbhandler {
 		$mysqli->close();
 		//return $queryResult;
 		return $queryContent;//for debugging
+	}
+
+	/**
+	 * sendQueries
+	 * @return query results of all queued queries as an array if transaction is successful,
+	 *         false if transaction failed.
+	 */
+	private function sendQueries() {
+		//PDO transaction
+		//Start connection
+		try {
+			$serverName = dbhandler::$server;
+			$dbName = dbhandler::$database;
+			$options = array(PDO::ATTR_AUTOCOMMIT=>FALSE);
+			$dbh = new PDO("mysql:host=$serverName;dbname=$dbName", dbhandler::$username, dbhandler::$password, $options);
+		} catch (PDOException $e) {
+			echo "Error connecting to database: ".$e->getMessage()."<br/>";
+			die();
+		}
+
+		//Transaction
+		try {
+			$queryResults = array();
+			$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$dbh->beginTransaction();
+			foreach ($this->queryQueue as $query) {
+				echo $query;
+				array_push($queryResults, $dbh->query($query));
+			}
+			$dbh->commit();
+			$this->queryQueue = array();
+			return $queryResults;
+		} catch(Exception $e) {
+			$dbh->rollBack();
+			return false;
+		}
+	}
+
+	/**
+	 * queueQuery
+	 * Queries are sent in transactions, so the user code need to queue queries by calling
+	 * the query methods and at last, call sendQuery method to commit this transaction.
+	 */
+	private function queueQuery($queryContent) {
+		array_push($this->queryQueue, $queryContent);
+		return "Query queued";
 	}
 	//---------------------------- INSERT QUERY---------------------------//
 	/**
@@ -39,16 +90,15 @@ class dbhandler {
 	 *        is going to be inserted. Please refer to the specification
 	 *        of hotel table for the order of attributes. You have to
 	 *        strictly follow the order of attributes!
-	 * @return returns the result of sendQuery method
 	 * A generic method used for inserting attributes to a specified
 	 * table.
 	 */
-	private static function insertIntoTable($tableName, $attrList, $rowInfo) {
+	private function insertIntoTable($tableName, $attrList, $rowInfo) {
 		$attrListString = dbhandler::getCommaSeparatedString($attrList);
 		$rowInfoString = dbhandler::getCommaSeparatedString($rowInfo);
 
 		$queryContent = " INSERT INTO $tableName($attrListString) VALUES($rowInfoString);";
-		return dbhandler::sendQuery($queryContent);
+		return $this->queueQuery($queryContent);
 	}
 
 	/**
@@ -84,10 +134,9 @@ class dbhandler {
 	 * @param attributes of a hotel. NOTE: the user is responsible to ensure the attributes
 	 *        are of the correct types. Speciically, strings should already have single
 	 *        quotes enclosing them; dates should be in the correct format etc.
-	 * @return return result of sendQuery method
 	 * public interface to insert a row into hotel table
 	 */
-	public static function insertIntoHotel($name, $location, $star, $sustain, $aircon, 
+	public function insertIntoHotel($name, $location, $star, $sustain, $aircon, 
 		$meeting, $pets, $restaurant, $carpark, $internet, $child, $nosmoking, $bizcentre, 
 		$disabled, $fitness, $swim, $thalassotherapy, $golf, $tennis) {
 		$attrList = dbhandler::generateRowInfoArray("hotelname", "location", "star", "sustain_certified",
@@ -97,7 +146,7 @@ class dbhandler {
 		$rowInfo = dbhandler::generateRowInfoArray($name, $location, $star, $sustain, $aircon, 
 		$meeting, $pets, $restaurant, $carpark, $internet, $child, $nosmoking, $bizcentre, 
 		$disabled, $fitness, $swim, $thalassotherapy, $golf, $tennis);
-		return dbhandler::insertIntoTable("hotel", $attrList, $rowInfo);
+		return $this->insertIntoTable("hotel", $attrList, $rowInfo);
 	}
 
 	/**
@@ -105,14 +154,13 @@ class dbhandler {
 	 * @param attributes of a facility. NOTE: the user is responsible to ensure the attributes
 	 *        are of the correct types. Speciically, strings should already have single
 	 *        quotes enclosing them; dates should be in the correct format etc.
-	 * @return return result of sendQuery method
 	 * public interface to insert a row into facility table
 	 */
-	public static function insertIntoFacility($hotelid, $room_class, $bed_size, $no_bed, $room_desc, $room_count) {
+	public function insertIntoFacility($hotelid, $room_class, $bed_size, $no_bed, $room_desc, $room_count) {
 		$attrList = dbhandler::generateRowInfoArray("hotelid", "room_class", "bed_size", "no_bed",
 			"room_desc", "room_count");
 		$rowInfo = dbhandler::generateRowInfoArray($hotelid, $room_class, $bed_size, $no_bed, $room_desc, $room_count);
-		return dbhandler::insertIntoTable("facility", $attrList, $rowInfo);
+		return $this->insertIntoTable("facility", $attrList, $rowInfo);
 	}
 
 	/**
@@ -120,13 +168,12 @@ class dbhandler {
 	 * @param attributes of a user. NOTE: the user is responsible to ensure the attributes
 	 *        are of the correct types. Speciically, strings should already have single
 	 *        quotes enclosing them; dates should be in the correct format etc.
-	 * @return return result of sendQuery method
 	 * public interface to insert a row into user table
 	 */
-	public static function insertIntoUser($email, $password, $user_name, $isAdmin) {
+	public function insertIntoUser($email, $password, $user_name, $isAdmin) {
 		$attrList = dbhandler::generateRowInfoArray("email", "password", "user_name", "isAdmin");
 		$rowInfo = dbhandler::generateRowInfoArray($email, $password, $user_name, $isAdmin);
-		return dbhandler::insertIntoTable("user", $attrList, $rowInfo);
+		return $this->insertIntoTable("user", $attrList, $rowInfo);
 	}
 
 	/**
@@ -134,13 +181,12 @@ class dbhandler {
 	 * @param attributes of a booking. NOTE: the user is responsible to ensure the attributes
 	 *        are of the correct types. Speciically, strings should already have single
 	 *        quotes enclosing them; dates should be in the correct format etc.
-	 * @return return result of sendQuery method
 	 * public interface to insert a row into booking table
 	 */
-	public static function insertIntoBooking($ref, $uid, $checkin, $checkout, $status) {
+	public function insertIntoBooking($ref, $uid, $checkin, $checkout, $status) {
 		$attrList = dbhandler::generateRowInfoArray("ref", "uid", "checkin", "checkout", "status");
 		$rowInfo = dbhandler::generateRowInfoArray($ref, $uid, $checkin, $checkout, $status);
-		return dbhandler::insertIntoTable("booking", $attrList, $rowInfo);
+		return $this->insertIntoTable("booking", $attrList, $rowInfo);
 	}
 
 	/**
@@ -148,11 +194,12 @@ class dbhandler {
 	 * @param attributes of a reserve. NOTE: the user is responsible to ensure the attributes
 	 *        are of the correct types. Speciically, strings should already have single
 	 *        quotes enclosing them; dates should be in the correct format etc.
-	 * @return return result of sendQuery method
 	 * public interface to insert a row into reserve table
 	 */
-	public static function insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $count) {
+	public function insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $count) {
 		$attrList = dbhandler::generateRowInfoArray("ref", "hotelid", "room_class", "bed_size", "no_bed", "count");
+		$rowInfo = dbhandler::generateRowInfoArray($ref, $hotelid, $room_class, $bed_size, $no_bed, $count);
+		return $this->insertIntoTable("reserve", $attrList, $rowInfo);
 	}
 
 	//------------------------------ DELETE QUERY --------------------------------------
@@ -168,9 +215,9 @@ class dbhandler {
 	 * Deletes a row from the specified table whose properties match the constraints. The
 	 * user of his code is responsible to write correct constraints.
 	 */
-	private static function deleteFromTable($where) {
+	private function deleteFromTable($tableName, $where) {
 		$queryContent = "DELETE FROM $tableName WHERE $where;";
-		return dbhandler::sendQuery($queryContent);
+		return $this->queueQuery($queryContent);
 	}
 
 	/**
@@ -180,24 +227,24 @@ class dbhandler {
 	 * @return result returned by the query
 	 * Public interface provided to delete from hotel table
 	 */
-	public static function deleteFromHotel($constraints) {
-		return dbhandler::deleteFromTable("hotel", $constraints);
+	public function deleteFromHotel($constraints) {
+		return $this->deleteFromTable("hotel", $constraints);
 	}
 
-	public static function deleteFromFacility($constraints) {
-		return dbhandler::deleteFromTable("facility", $constraints);
+	public function deleteFromFacility($constraints) {
+		return $this->deleteFromTable("facility", $constraints);
 	}
 
-	public static function deleteFromUser($constraints) {
-		return dbhandler::deleteFromTable("user", $constraints);
+	public function deleteFromUser($constraints) {
+		return $this->deleteFromTable("user", $constraints);
 	}
 
-	public static function deleteFromBooking($constraints) {
-		return dbhandler::deleteFromTable("booking", $constraints);
+	public function deleteFromBooking($constraints) {
+		return $this->deleteFromTable("booking", $constraints);
 	}
 
-	public static function deleteFromReserve($constraints) {
-		return dbhandler::deleteFromTable("reserve", $constraints);
+	public function deleteFromReserve($constraints) {
+		return $this->deleteFromTable("reserve", $constraints);
 	}
 
 	//--------------------------Modify Query-------------------------------------------
@@ -215,7 +262,7 @@ class dbhandler {
 	 */
 	private static function updateTable($tableName, $set, $where) {
 		$queryContent = "UPDATE $tableName SET $set WHERE $where;";
-		return dbhandler::sendQuery($queryContent);
+		return $this->queueQuery($queryContent);
 	}
 
 	/** 
@@ -231,7 +278,7 @@ class dbhandler {
 	 * "department='CS'"
 	 */
 	public static function updateHotel($set, $where) {
-		return dbhandler::updateTable("hotel", $set, $where);
+		return $this->updateTable("hotel", $set, $where);
 	}
 
 	/** 
@@ -247,7 +294,7 @@ class dbhandler {
 	 * "department='CS'"
 	 */
 	public static function updateFacility($set, $where) {
-		return dbhandler::updateTable("user", $set, $where);
+		return $this->updateTable("user", $set, $where);
 	}
 
 	/** 
@@ -263,7 +310,7 @@ class dbhandler {
 	 * "department='CS'"
 	 */
 	public static function updateUser($set, $where) {
-		return dbhandler::updateTable("user", $set, $where);
+		return $this->updateTable("user", $set, $where);
 	}
 
 	/** 
@@ -279,7 +326,7 @@ class dbhandler {
 	 * "department='CS'"
 	 */
 	public static function updateBooking($set, $where) {
-		return dbhandler::updateTable("booking", $set, $where);
+		return $this->updateTable("booking", $set, $where);
 	}
 
 	/** 
@@ -296,8 +343,9 @@ class dbhandler {
 	 * Well the only thing modifiable here is the count~~
 	 */
 	public static function updateReserve($set, $where) {
-		return dbhandler::updateTable("reserve", $set, $where);
+		return $this->updateTable("reserve", $set, $where);
 	}
+
 
 
 }
