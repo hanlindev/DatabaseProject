@@ -11,7 +11,9 @@ DROP TABLE hotel;
 CREATE TABLE hotel(
 hotelid INT PRIMARY KEY AUTO_INCREMENT,
 hotelname VARCHAR(128) NOT NULL,
-location VARCHAR(256) NOT NULL,
+country VARCHAR(64) NOT NULL,
+city VARCHAR(64) NOT NULL,
+street VARCHAR(256),
 star INT DEFAULT 1 CHECK(star > 0 and star < 7),
 sustain_certified BOOL DEFAULT 0 NOT NULL,
 aircon BOOL DEFAULT 0 NOT NULL,
@@ -67,36 +69,48 @@ FOREIGN KEY(hotelid, room_class, bed_size, no_bed)
 REFERENCES facility(hotelid, room_class, bed_size, no_bed) ON DELETE SET NULL);
 
 
+
+
 /* Third fill in data */
 /* Hotels */
-INSERT INTO hotel(hotelname, location, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
+INSERT INTO hotel(hotelname, country, city, street, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
  VALUES(
 'Hotel California',
-'123, California Road, Singapore',3,
+'Singapore',
+'Singapore',
+'123, California Road',3,
 0,0,0,1,1,1,1,0,1,0,1,1,0,0,0,0);
 
-INSERT INTO hotel(hotelname, location, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
+INSERT INTO hotel(hotelname, country, city, street, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
  VALUES(
 'Hotel Florida',
-'123, Florida Road, Singapore',4,
+'United States of America',
+'Florida',
+'123, Florida Road',4,
 0,1,0,1,1,1,1,0,1,0,1,1,0,1,0,0);
 
-INSERT INTO hotel(hotelname, location, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
+INSERT INTO hotel(hotelname, country, city, street, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
  VALUES(
 'Hotel Singapore',
-'123, Singapore Road, Singapore',3,
+'Singapore',
+'Singapore',
+'123, Singapore Road',3,
 0,0,0,1,0,1,0,0,1,0,1,1,0,0,0,0);
 
-INSERT INTO hotel(hotelname, location, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
+INSERT INTO hotel(hotelname, country, city, street, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
  VALUES(
 'Hotel India',
-'123, India Road, Singapore',2,
+'India',
+'New Dheli',
+'123, India Road',2,
 0,0,0,1,0,0,0,0,1,0,1,1,0,0,0,0);
 
-INSERT INTO hotel(hotelname, location, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
+INSERT INTO hotel(hotelname, country, city, street, star, sustain_certified, aircon, meeting_rm, pets_allowed, restaurant, car_park, internet, child_facility, no_smoking, biz_centre, reduced_mobility_rm, fitness_club, swimming_pool, thalassotherapy_centre, golf, tennis)
  VALUES(
 'Hotel Vietnam',
-'123, Vietnam Road, Singapore',1,
+'Vietnam',
+'Ho Chi Ming',
+'123, Vietnam Road',1,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 /* Facilities */

@@ -6,7 +6,9 @@ parsed. sigh */
 CREATE TABLE hotel(
 hotelid INT PRIMARY KEY AUTO_INCREMENT,
 hotelname VARCHAR(128) NOT NULL,
-location VARCHAR(256) NOT NULL,
+country VARCHAR(64) NOT NULL,
+city VARCHAR(64) NOT NULL,
+street VARCHAR(256),
 star INT DEFAULT 1 CHECK(star > 0 and star < 7),
 sustain_certified BOOL DEFAULT 0 NOT NULL,
 aircon BOOL DEFAULT 0 NOT NULL,

@@ -136,14 +136,14 @@ class dbhandler {
 	 *        quotes enclosing them; dates should be in the correct format etc.
 	 * public interface to insert a row into hotel table
 	 */
-	public function insertIntoHotel($name, $location, $star, $sustain, $aircon, 
+	public function insertIntoHotel($name, $country, $city, $street, $star, $sustain, $aircon, 
 		$meeting, $pets, $restaurant, $carpark, $internet, $child, $nosmoking, $bizcentre, 
 		$disabled, $fitness, $swim, $thalassotherapy, $golf, $tennis) {
-		$attrList = dbhandler::generateRowInfoArray("hotelname", "location", "star", "sustain_certified",
+		$attrList = dbhandler::generateRowInfoArray("hotelname", "country", "city", "street", "star", "sustain_certified",
 			"aircon", "meeting_rm", "pets_allowed", "restaurant", "car_park", "internet", "child_facility",
 			"no_smoking", "biz_centre", "reduced_mobility_rm", "fitness_club", "swimming_pool",
 			"thalassotherapy_centre", "golf", "tennis");
-		$rowInfo = dbhandler::generateRowInfoArray($name, $location, $star, $sustain, $aircon, 
+		$rowInfo = dbhandler::generateRowInfoArray($name, $street, $star, $sustain, $aircon, 
 		$meeting, $pets, $restaurant, $carpark, $internet, $child, $nosmoking, $bizcentre, 
 		$disabled, $fitness, $swim, $thalassotherapy, $golf, $tennis);
 		return $this->insertIntoTable("hotel", $attrList, $rowInfo);
@@ -357,6 +357,6 @@ class dbhandler {
 	}
 
 	//----------------------Useful functions------------------------------------
-	public function searchHotel($)
+	public function searchHotel($country, )
 }
 ?>
