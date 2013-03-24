@@ -66,6 +66,9 @@ else
 				<li>
 					<a href="about.php" id="email">About</a>
 				</li>
+                				<li>
+					<a href="userpage.php" id="user">My Account</a>
+				</li>
 			</ul>
 			<p>CS2102 Project Group 8</p>
 			<div id="featured">

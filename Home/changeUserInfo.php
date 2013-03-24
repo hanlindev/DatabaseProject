@@ -22,12 +22,16 @@ else
 	mysql_select_db('CS2102');
 	$sql = mysql_query("SELECT * FROM user WHERE email = '$email' AND password = '$password'");
 	$row = mysql_fetch_array($sql);
-	if($row&&$_POST['submit']) {
+	if($row) {
 		//change password here
 		$new_user_name = $_POST['new_user_name'];
 		$new_password = $_POST['new_password'];
-		echo $new_user_name;
-		echo $new_password;
+		$new_password = sha1($new_password);
+		//echo $new_user_name;
+		//echo $new_password;
+		$sql = mysql_query("UPDATE user SET user_name = '$new_user_name', password = '$new_password' WHERE email = '$email'");
+		echo 'Your User Name and Password has been successfully changed';
+		echo '<a href="index.html">Go back to Login page</a>';
 	}
 	else 
 	{

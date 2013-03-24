@@ -24,12 +24,12 @@ if ($_POST['submit'])
 		mysql_query($sql2);
 		mysql_close();
 		echo 'You have been entered into our database.';
-		sleep(2);
-		header("location:home.php");
+		
+		echo '<a href="index.html">Go back to Login page</a>';
 	}
 	else {
 		echo 'Name already in use.';
-		header("location:index.html");
+		echo '<a href="index.html">Go back to Sign Up page</a>';
 	}
 }
 ?>
