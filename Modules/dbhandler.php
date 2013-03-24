@@ -40,6 +40,8 @@ class dbhandler {
 	 * sendQueries
 	 * @return query results of all queued queries as an array if transaction is successful,
 	 *         false if transaction failed.
+	 *         Each element in the array is an array of rows in the result set indexed by the
+	 *         column names as well as 0-indexed column numbers.
 	 */
 	private function sendQueries() {
 		//PDO transaction
@@ -60,8 +62,8 @@ class dbhandler {
 			$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$dbh->beginTransaction();
 			foreach ($this->queryQueue as $query) {
-				echo $query;
-				array_push($queryResults, $dbh->query($query));
+				$aResult = $dbh->query($query);
+				array_push($queryResults, $aResult->fetchAll());
 			}
 			$dbh->commit();
 			$this->queryQueue = array();
@@ -357,6 +359,72 @@ class dbhandler {
 	}
 
 	//----------------------Useful functions------------------------------------
-	public function searchHotel($country, )
+	public static function getAssocArray() {
+		$args = func_get_arg();
+		$iter = $args->getIterator();
+		$rv = array();
+		while ($iter->valid()) {
+			$attr = $iter->current();
+			$iter->next();
+			$value = $iter->current();
+			$iter->next();
+			if ($value != '' && $value != 0) {
+				$rv[$attr] = $iter;
+			}
+		}
+		return $rv;
+	}
+
+	/**
+	 * findHotels
+	 * @return a list of id of hotels
+	 */
+	public function findHotels($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo) {
+		$checkinDate = $bookingInfo['checkin'];
+		$checkoutDate = $bookingInfo['checkout'];
+		// Get available rooms from matching hotels
+		$findRoomCountQuery = <<<EOD
+SELECT h.hotelid, f.room_count
+FROM hotel h, facility f
+WHERE h.hotelid=f.hotelid
+EOD;
+		// Fill in the optional information
+		foreach ($hotelInfo as $attr => $value) {
+			$findRoomCountQuery .= " AND $attr LIKE '%$value%'";
+		}
+		foreach ($roomInfo as $attr => $value) {
+			$findRoomCountQuery .= " AND $attr = $value";
+		}
+		foreach ($hotelFeatures as $attr => $value) {
+			$findRoomCountQuery .= " AND $attr = $value";
+		}
+		$findRoomCountQuery .= " " <<<EOD
+GROUP BY h.hotelid
+HAVING f.room_count > (
+	SELECT SUM(r.count)
+	FROM facility f, reserve r, booking b
+	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
+	AND r.no_bed=f.no_bed AND r.ref=b.ref AND
+	((b.checkout>$checkinDate AND b.checkout<$checkoutDate) OR
+		(b.checkin>$checkinDate AND b.checkin<$checkoutDate) OR
+		(b.checkin<$checkinDate AND b.checkout>$checkoutDate)))
+ORDER BY h.hotelid ASC;
+EOD;
+
+		$this->queueQuery($findRoomCountQuery);
+		
+		// Get reserved number of rooms of the same type
+		
+	}
+	/**
+	 * changeUserNamePassword
+	 * @param email the primary key of the row
+	 * @param name to be changed
+	 * @param password to be changed
+	 * given the email, change the name and password accordingly
+	 */
+	public function changeUserNamePassword($email, $name, $password) {
+		// TODO implement this
+	}
 }
 ?>
