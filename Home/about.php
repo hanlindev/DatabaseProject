@@ -22,10 +22,13 @@ else
 	mysql_select_db('CS2102');
 	$sql = mysql_query("SELECT * FROM user WHERE email = '$email' AND password = '$password'");
 	$row = mysql_fetch_array($sql);
-	if($row&&!$row['isAdmin'])
+	if($row&&!$row['isAdmin']){
 		echo 'Welcome '.$row['user_name'];
+		echo '<a href="checklogin?log=off">log off</a>';
+	}
 	else if ($row&&$row['isAdmin']){
 		echo "You are admin";
+		echo '<a href="checklogin?log=off">log off</a>';
 	}
 	else 
 	{
@@ -47,10 +50,13 @@ else
 		<div class="header">
 			<ul id="navigation">
 				<li>
-					<a href="index.html"><img src="images/icon-home.gif" alt=""/></a>
+					<a href="home.php"><img src="images/icon-home.gif" alt=""/></a>
 				</li>
 				<li>
 					<a href="#"><img src="images/icon-mail.gif" alt=""/></a>
+				</li>
+                <li>
+					<a href="userpage.php" id="user">My Account</a>
 				</li>
 			</ul>
 			<p>CS2102 Project Group 8</p>

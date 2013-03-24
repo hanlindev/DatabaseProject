@@ -1,18 +1,5 @@
 <?php
-ob_start();
 session_start();
-$log = $_GET['log'];
-if($log == 'off')
-{
-	unset($_SESSION['login']);
-	setcookie('login', '', time() - 86400);
-	session_destroy();
-	session_regenerate_id(true);
-	ob_end_clean();
-	echo 'Logged out';
-	exit;
-}
-
 function clear($message)
 {
 	if(!get_magic_quotes_gpc())
@@ -37,11 +24,11 @@ else
 	$row = mysql_fetch_array($sql);
 	if($row&&!$row['isAdmin']){
 		echo 'Welcome '.$row['user_name'];
-		echo '<a href="?log=off">log off</a>';
+		echo '<a href="checklogin?log=off">log off</a>';
 	}
 	else if ($row&&$row['isAdmin']){
 		echo "You are admin";
-		echo '<a href="?log=off">log off</a>';
+		echo '<a href="checklogin?log=off">log off</a>';
 	}
 	else 
 	{
@@ -50,6 +37,7 @@ else
 	}
 }
 ?>
+
 <!DOCTYPE html>
 
 <html><head>

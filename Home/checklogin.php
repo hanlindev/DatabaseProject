@@ -38,8 +38,9 @@ else if ($_POST['submit'])
 		echo 'Welcome ' . $output['email'];
 		echo 'isAdmin'.$output['isAdmin'];
 		echo '<a href="?log=off">log off</a>';
-		header("location:home.php");
+		
 		$_SESSION['login'] = array($email, $password);
+		echo '<a href=home.php>Go to Home page</a>';
 	}
 	else
 		echo 'Login failed';
