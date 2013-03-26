@@ -109,52 +109,46 @@ else
 				      <option value="6">6</option>
 				      <option value="7">6+</option>
 			        </select>
+			        Sustainable Certified: <input type="hidden" name="sustain" value="0">
+					                       <input type="checkbox" name="sustain" value="1">
+					Air Conditioner: <input type="hidden" name="aircon" value="0">
+					                 <input type="checkbox" name="aircon" value="1">
+					Meeting Room: <input type="hidden" name="meeting" value="0">
+					              <input type="checkbox" name="meeting" value="1">
+					Pets Allowed: <input type="hidden" name="pets" value="0">
+					              <input type="checkbox" name="pets" value="1">
+					Restaurant: <input type="hidden" name="restaurant" value="0">
+					            <input type="checkbox" name="restaurant" value="1">
+					Car Park: <input type="hidden" name="carpark" value="0">
+					            <input type="checkbox" name="carpark" value="1">
+					Internet: <input type="hidden" name="internet" value="0">
+					            <input type="checkbox" name="internet" value="1">
+					Child Facilities: <input type="hidden" name="child" value="0">
+					            <input type="checkbox" name="child" value="1">
+					100% No Smoking: <input type="hidden" name="nosmoking" value="0">
+					            <input type="checkbox" name="nosmoking" value="1">
+					Business Centre: <input type="hidden" name="bizcentre" value="0">
+					            <input type="checkbox" name="bizcentre" value="1">
+					Reduced Mobility Rooms: <input type="hidden" name="disabled" value="0">
+					            <input type="checkbox" name="disabled" value="1">
+					Fitness Club: <input type="hidden" name="fitness" value="0">
+					            <input type="checkbox" name="fitness" value="1">
+					Swimming Pool: <input type="hidden" name="swim" value="0">
+					            <input type="checkbox" name="swim" value="1">
+					Thalassotherapy Centre: <input type="hidden" name="thalassotherapy" value="0">
+					            <input type="checkbox" name="thalassotherapy" value="1">
+					Golf: <input type="hidden" name="golf" value="0">
+					            <input type="checkbox" name="golf" value="1">
+					Tennis: <input type="hidden" name="tennis" value="0">
+		            <input type="checkbox" name="tennis" value="1">
 				    Arrival Date:
 				    <input id="date" name="arrival_date" type="date" />
 				    Departure Date:
 				    <input id="date" name="departure_date" type="date" />
-			      <label for="0">sustainable</label>
-<input id="search" type="submit" value=""/>
+					<input id="search" type="submit" value=""/>
 		        </form>
 				  
 				</div>
-			  <div>
-			    <h3>Room Features</h3>
-			    <form action="#" method="post">
-		Sustainable Certified: <input type="hidden" name="sustain" value="0">
-		                       <input type="checkbox" name="sustain" value="1">
-		Air Conditioner: <input type="hidden" name="aircon" value="0">
-		                 <input type="checkbox" name="aircon" value="1">
-		Meeting Room: <input type="hidden" name="meeting" value="0">
-		              <input type="checkbox" name="meeting" value="1">
-		Pets Allowed: <input type="hidden" name="pets" value="0">
-		              <input type="checkbox" name="pets" value="1">
-		Restaurant: <input type="hidden" name="restaurant" value="0">
-		            <input type="checkbox" name="restaurant" value="1">
-		Car Park: <input type="hidden" name="carpark" value="0">
-		            <input type="checkbox" name="carpark" value="1">
-		Internet: <input type="hidden" name="internet" value="0">
-		            <input type="checkbox" name="internet" value="1">
-		Child Facilities: <input type="hidden" name="child" value="0">
-		            <input type="checkbox" name="child" value="1">
-		100% No Smoking: <input type="hidden" name="nosmoking" value="0">
-		            <input type="checkbox" name="nosmoking" value="1">
-		Business Centre: <input type="hidden" name="bizcentre" value="0">
-		            <input type="checkbox" name="bizcentre" value="1">
-		Reduced Mobility Rooms: <input type="hidden" name="disabled" value="0">
-		            <input type="checkbox" name="disabled" value="1">
-		Fitness Club: <input type="hidden" name="fitness" value="0">
-		            <input type="checkbox" name="fitness" value="1">
-		Swimming Pool: <input type="hidden" name="swim" value="0">
-		            <input type="checkbox" name="swim" value="1">
-		Thalassotherapy Centre: <input type="hidden" name="thalassotherapy" value="0">
-		            <input type="checkbox" name="thalassotherapy" value="1">
-		Golf: <input type="hidden" name="golf" value="0">
-		            <input type="checkbox" name="golf" value="1">
-		Tennis: <input type="hidden" name="tennis" value="0">
-		            <input type="checkbox" name="tennis" value="1">
-		        </form>
-		      </div>
 			</div>
 		</div> 
 
