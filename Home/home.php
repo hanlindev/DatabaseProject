@@ -143,7 +143,7 @@ else
 		            <input type="checkbox" name="tennis" value="1">
 				    Arrival Date:
 				    <input id="date" name="arrival_date" type="date" />
-				    Departure Date:
+				    Departure Date: d
 				    <input id="date" name="departure_date" type="date" />
 					<input id="search" type="submit" value=""/>
 		        </form>
