@@ -119,6 +119,7 @@ INSERT INTO facility VALUES(1, 1, 3, 1, '', 100);
 INSERT INTO facility VALUES(1, 2, 3, 1, '', 100);
 INSERT INTO facility VALUES(1, 3, 3, 1, '', 100);
 INSERT INTO facility VALUES(1, 4, 3, 1, '', 100);
+INSERT INTO facility VALUES(2, 4, 1, 1, '', 100);
 
 /* Users */
 INSERT INTO user VALUES('a0000001@abc.com', '123321', 'a1', 0);

@@ -6,8 +6,12 @@
 		} else {
 			foreach($hotels as $row) {
 				$id = $row["hotelid"];
+				$name = $row["hotelname"];
 				$availability = $row["availability"];
-				echo "<p>$id have $availability left.</p>";
+				$room_class = $row["room_class"];
+				$bed_size = $row["bed_size"];
+				$bed_count = $row["bed_count"];
+				echo "<p>$id: $name have $availability left.</p>";
 			}
 		}
 	}

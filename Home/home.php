@@ -72,7 +72,7 @@ else
 			  <div>
               
 				  <h3>Find A Hotel Room</h3>
-			    <form action="../Modules/homeSearch.php" method="POST">
+			    <form action="searchresult.php" method="POST">
 				    Country:
 				    <input id="location" name="country" type="text" value=""/>
 				    City:
@@ -81,6 +81,7 @@ else
 				    <input id="location" name="street"  type="text" value=""/>
                     Hotel Stars:
                     <select name = "star" id="room_class">
+                      <option value="0">Any</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
@@ -90,6 +91,7 @@ else
                     </select>
 				    Room Class:
 				    <select name="room_class" id="room_class">
+				      <option value="0">Any</option>
 				      <option value="1">Standard</option>
 				      <option value="2">Superior</option>
 				      <option value="3">Deluxe</option>
@@ -99,6 +101,7 @@ else
 				    
                     Room Category:
 				    <select name="room_category" id="room_class">
+				      <option value="0">Any</option>
 				      <option value="1">Single</option>
 				      <option value="2">Double</option>
 				      <option value="3">Queen</option>
@@ -108,6 +111,7 @@ else
 			        </select>
 				    Bed Number:
 				    <select name="bed_no" id="room_class">
+				      <option value="0">Any</option>
 				      <option value="1">1</option>
 				      <option value="2">2</option>
 				      <option value="3">3</option>
