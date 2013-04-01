@@ -380,14 +380,18 @@ class dbhandler {
 	}
 
 	/**
-	 * findHotels
-	 * @return a list of id of hotels
+	 * findAvailableRooms
+	 * @return an array of rows of matching results, in each row there are
+	 *         hotelid, hotelname, room_class, bed_size, no_bed, room_count 
+	 *         and availability columns. The row is represented as an 
+	 *         associative array with column names as indices
 	 */
 	public function findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo) {
 		$checkinDate = $bookingInfo['checkin'];
 		$checkoutDate = $bookingInfo['checkout'];
 		// Get available rooms from matching hotels
-		$findRoomCountQuery = <<<EOD
+		// Get available rooms from matching hotels
+		$roomConditions = <<<EOD
 SELECT f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
 FROM hotel h, facility f
 WHERE h.hotelid=f.hotelid
@@ -395,27 +399,42 @@ EOD;
 		// Fill in the optional information
 		foreach ($hotelInfo as $attr => $value) {
 			if (strcmp($attr, "star") != 0) {
-				$findRoomCountQuery .= " AND h.$attr LIKE '%$value%'";
+				$roomConditions .= " AND h.$attr LIKE '%$value%'";
 			} else {
-				$findRoomCountQuery .= " AND h.$attr=$value";
+				$roomConditions .= " AND h.$attr=$value";
 			}
 		}
 		foreach ($roomInfo as $attr => $value) {
-			$findRoomCountQuery .= " AND f.$attr = $value";
+			$roomConditions .= " AND f.$attr = $value";
 		}
 		foreach ($hotelFeatures as $attr => $value) {
-			$findRoomCountQuery .= " AND h.$attr = $value";
+			$roomConditions .= " AND h.$attr = $value";
 		}
-		$findRoomCountQuery .= " ". <<<EOD
+		// Construct time conditions
+		$timeCondition = '';
+		if (!empty($checkinDate) && !empty($checkoutDate)) {
+			echo "<p> What!!</p>";//for debugging
+			$timeCondition .=<<<EOD
+AND ((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
+		(b.checkin>'$checkinDate' AND b.checkin<'$checkoutDate') OR
+		(b.checkin<'$checkinDate' AND b.checkout>'$checkoutDate'))
+EOD;
+		}
+		echo "$timeCondition";//for debugging
+		$findRoomCountQuery .= <<<EOD
+$roomConditions
 GROUP BY f.hotelid, f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
 HAVING f.room_count > (
 	SELECT SUM(r.count)
 	FROM reserve r, booking b
 	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
-	AND r.no_bed=f.no_bed AND r.ref=b.ref AND
-	((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
-		(b.checkin>'$checkinDate' AND b.checkin<'$checkoutDate') OR
-		(b.checkin<'$checkinDate' AND b.checkout>'$checkoutDate')))
+	AND r.no_bed=f.no_bed AND r.ref=b.ref $timeCondition)
+UNION
+$roomConditions AND NOT EXISTS(
+	SELECT *
+	FROM reserve r
+	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size AND
+			r.no_bed=f.no_bed $timeCondition)
 EOD;
 		
 		// Get reserved number of rooms of the same type
@@ -423,21 +442,20 @@ EOD;
 SELECT SUM(r.count) as rCount, r.hotelid, r.room_class, r.bed_size, r.no_bed
 FROM facility f, reserve r, booking b
 WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
-AND r.no_bed=f.no_bed AND r.ref=b.ref AND
-((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
-	(b.checkin>'$checkinDate' AND b.checkin<'$checkoutDate') OR
-	(b.checkin<'$checkinDate' AND b.checkout>'$checkoutDate'))
+AND r.no_bed=f.no_bed AND r.ref=b.ref
+$timeCondition
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
 EOD;
 		$joinResults = <<<EOD
-SELECT ro.hotelid, ro.room_class, ro.bed_size, ro.no_bed, ro.room_count - re.rCount AS availability
+SELECT ro.hotelid, ro.room_class, ro.bed_size, ro.no_bed, ro.room_count, ro.room_count - re.rCount AS availability
 FROM ($findRoomCountQuery) AS ro
-JOIN ($findReserveCountQuery) AS re
+LEFT JOIN ($findReserveCountQuery) AS re
 ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = re.bed_size AND ro.no_bed = re.no_bed;
 EOD;
 		echo "<p> $joinResults </p>";
 		$this->queueQuery($joinResults);
-		return $this->sendQueries();
+		$rv = $this->sendQueries();
+		return $rv[0];
 	}
 	/**
 	 * changeUserNamePassword
