@@ -379,7 +379,7 @@ class dbhandler {
 	 * findHotels
 	 * @return a list of id of hotels
 	 */
-	public function findHotels($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo) {
+	public function findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo) {
 		$checkinDate = $bookingInfo['checkin'];
 		$checkoutDate = $bookingInfo['checkout'];
 		// Get available rooms from matching hotels
@@ -408,13 +408,29 @@ HAVING f.room_count > (
 	((b.checkout>$checkinDate AND b.checkout<$checkoutDate) OR
 		(b.checkin>$checkinDate AND b.checkin<$checkoutDate) OR
 		(b.checkin<$checkinDate AND b.checkout>$checkoutDate)))
-ORDER BY h.hotelid ASC;
+ORDER BY h.hotelid ASC
 EOD;
-
-		$this->queueQuery($findRoomCountQuery);
 		
 		// Get reserved number of rooms of the same type
-		
+		$findReserveCountQuery = <<<EOD
+SELECT SUM(r.count), r.hotelid, r.room_class, r.bed_size, r.no_bed
+FROM facility f, reserve r, booking b
+WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
+AND r.no_bed=f.no_bed AND r.ref=b.ref AND
+((b.checkout>$checkinDate AND b.checkout<$checkoutDate) OR
+	(b.checkin>$checkinDate AND b.checkin<$checkoutDate) OR
+	(b.checkin<$checkinDate AND b.checkout>$checkoutDate))
+GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
+EOD;
+		$joinResults = <<<EOD
+SELECT ro.hotelid, ro.room_class, ro.bed_size, ro.no_bed, ro.count - re.rCount
+FROM ($findRoomCountQuery) AS ro
+JOIN ($findReserveCountQuery) AS re
+ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = re.bed_size AND ro.no_bed
+ = re.no_bed;
+EOD;
+		$this->queueQuery($joinResults);
+		return $this.sendQueries();
 	}
 	/**
 	 * changeUserNamePassword
