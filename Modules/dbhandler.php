@@ -434,7 +434,7 @@ $roomConditions AND NOT EXISTS(
 	SELECT *
 	FROM reserve r
 	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size AND
-			r.no_bed=f.no_bed)
+			r.no_bed=f.no_bed $timeCondition)
 EOD;
 		
 		// Get reserved number of rooms of the same type
