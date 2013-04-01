@@ -31,6 +31,7 @@ else
 	if($row&&!$row['isAdmin']){
 		echo 'Welcome '.$row['user_name'];
 		echo '<a href="checklogin?log=off">log off</a>';
+
 	}
 	else if ($row&&$row['isAdmin']){
 		echo "You are admin";
@@ -42,17 +43,17 @@ else
 		exit;
 	}
 }
-?>
-
-<!DOCTYPE html>
+	echo '<!DOCTYPE html>
 
 <html>
 	<head>
+
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<title>Cruise Vacation</title>
+		<title>Hotel Booking</title>
 		<link rel="stylesheet" href="css/style.css" type="text/css" />
 	</head>
 	<body>
+
 		<div class="header">
 			<ul id="navigation">
 				<li>
@@ -64,10 +65,68 @@ else
 			</ul>
 			<p>CS2102 Project Group 8</p>
 </div> 
-	<div class="search">
-    	<ul id="search_result">
-        	//search result here!
-        </ul>
-	
-	</body>
-</html>  
+
+    	<table border = "1" style = " position: fixed;
+  top: 40%;
+  left: 40%;
+  margin-top: -50px;
+  margin-left: -100px;"><tr><th>Hotel ID</th>
+<th>Availability</th><th>Room Class</th><th>Bed Size</th><th>No of Beds</th><th>Book</th></tr>'
+    	;
+
+        		require 'Modules/dbhandler.php';
+				$country = $_POST["country"]; 
+				$city = $_POST["city"];		  
+				$street = $_POST["street"];
+				$star = $_POST['star'];
+				$roomClass = $_POST['room_class'];
+				$bedSize = $_POST['bed_size'];
+				$bedNo = $_POST['bed_no'];
+				$sustain = $_POST['sustain'];
+				$aircon = $_POST['aircon'];
+				$meeting = $_POST['meeting'];
+				$pets = $_POST['pets'];
+				$restaurant = $_POST['restaurant'];
+				$carpark = $_POST['carpark'];
+				$internet = $_POST['internet'];
+				$child = $_POST['child'];
+				$nosmoking = $_POST['nosmoking'];
+				$bizcentre = $_POST['bizcentre'];
+				$disabled = $_POST['disabled'];
+				$fitness = $_POST['fitness'];
+				$swim = $_POST['swim'];
+				$thalassotherapy = $_POST['thalassotherapy'];
+				$golf = $_POST['golf'];
+				$tennis = $_POST['tennis'];
+				$arrival = $_POST['arrival_date'];
+				$departure_date = $_POST['departure_date'];
+
+				$hotelInfo = dbhandler::getAssocArray('country', $country, 'city', $city, 'street', $street, 'star', $star);
+				$roomInfo = dbhandler::getAssocArray('room_class', $roomClass, 'bed_size', $bedSize, 'no_bed', $bedNo);
+				$hotelFeatures = dbhandler::getAssocArray('sustain_certified', $sustain, 'aircon', $aircon, 'meeting_rm', $meeting,
+				'pets_allowed', $pets, 'restaurant', $restaurant, 'car_park', $carpark, 'internet', $internet, 'child_facility', $child,
+				 'no_smoking', $nosmoking, 'biz_centre', $bizcentre, 'reduced_mobility_rm', $disabled, 'fitness_clus', $fitness,
+				 'swimming_pool', $swim, 'thalassotherapy_centre', $thalassotherapy, 'golf', $golf, 'tennis', $tennis);
+				$bookingInfo = dbhandler::getAssocArray('checkin', $arrival, 'checkout', $departure_date);
+
+				$dbh = new dbhandler();
+				$hotels = $dbh->findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+				if (!$hotels) {
+					echo "<p> Oops no hotel</p>";
+				} else {
+				foreach($hotels as $row) {
+					$hotelid = $row["hotelid"];
+					$availability = $row["availability"];
+					$availability = (empty($availability)) ? $row["room_count"] : $availability;
+					$room_class = $row['room_class'];
+					$bed_size = $row['bed_size'];
+					$no_bed = $row['no_bed'];
+					$hotelname = $row['hotelname'];
+
+					echo "<tr><td>$hotelid</td><td>$availability</td><td>$room_class</td><td>$bed_size</td><td>$no_bed</td><td><button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed.'\'">Book</button></td>></tr>';
+					}
+				}
+        	 	
+				echo '</table></body></html>';
+
+?>
