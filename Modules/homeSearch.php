@@ -1,5 +1,8 @@
 <?php
 	require 'dbhandler.php';
+
+	// This simple function demonstrates how you should access data returned
+	// by the findAvailableRoomsFunction
 	function displayHotel($hotels) {
 		if (!$hotels) {
 			echo "<p> Oops no hotel</p>";
@@ -7,7 +10,7 @@
 			foreach($hotels as $row) {
 				$id = $row["hotelid"];
 				$name = $row["hotelname"];
-				$availability = $row["availability"];
+				$availability = (empty($row["availability"]))? $row["room_count"] : $row["availability"];
 				$room_class = $row["room_class"];
 				$bed_size = $row["bed_size"];
 				$bed_count = $row["bed_count"];
@@ -52,5 +55,5 @@
 	$dbh = new dbhandler();
 	$hotels = $dbh->findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
 
-	displayHotel($hotels[0]);
+	displayHotel($hotels);
 ?>

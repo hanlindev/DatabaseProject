@@ -72,6 +72,7 @@ else
 			  <div>
               
 				  <h3>Find A Hotel Room</h3>
+			    <!-- <form action="../Modules/homeSearch.php" method="POST"> -->
 			    <form action="searchresult.php" method="POST">
 				    Country:
 				    <input id="location" name="country" type="text" value=""/>
