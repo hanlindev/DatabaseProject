@@ -18,8 +18,8 @@ else
 {
 	$email = clear($_SESSION['login'][0]); 
 	$password = clear($_SESSION['login'][1]);
-	mysql_connect('127.0.0.1','root','');
-	mysql_select_db('CS2102');
+    mysql_connect($localhost,$mysql_user_name,$mysql_password);
+    mysql_select_db($schema);
 	$sql = mysql_query("SELECT * FROM user WHERE email = '$email' AND password = '$password'");
 	$row = mysql_fetch_array($sql);
 	if($row&&!$row['isAdmin']){
