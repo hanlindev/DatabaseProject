@@ -62,4 +62,3 @@ count INT DEFAULT 1 NOT NULL CHECK(count > 0),
 FOREIGN KEY(ref)  REFERENCES booking(ref) ON DELETE CASCADE,
 FOREIGN KEY(hotelid, room_class, bed_size, no_bed) 
 REFERENCES facility(hotelid, room_class, bed_size, no_bed) ON DELETE SET NULL);
-
