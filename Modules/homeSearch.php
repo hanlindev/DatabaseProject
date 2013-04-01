@@ -1,12 +1,17 @@
 <?php
 	require 'dbhandler.php';
 	function displayHotel($hotels) {
-		// TODO complete the function
-		foreach($hotels as $i => $hotelid) {
-			echo "<p> $hotelid </p>";
+		if (!$hotels) {
+			echo "<p> Oops no hotel</p>";
+		} else {
+			foreach($hotels as $row) {
+				$id = $row["hotelid"];
+				$availability = $row["availability"];
+				echo "<p>$id have $availability left.</p>";
+			}
 		}
 	}
-	$country = $_POST["country'";
+	$country = $_POST["country"];
 	$city = $_POST["city"];
 	$street = $_POST["street"];
 	$star = $_POST['star'];
@@ -32,7 +37,7 @@
 	$arrival = $_POST['arrival_date'];
 	$departure_date = $_POST['departure_date'];
 
-	$hotelInfo = dbhandler::getAssocArray('country', $country, 'city', $city， 'street', $street, 'star', $star);
+	$hotelInfo = dbhandler::getAssocArray('country', $country, 'city', $city, 'street', $street, 'star', $star);
 	$roomInfo = dbhandler::getAssocArray('room_class', $roomClass, 'bed_size', $bedSize, 'no_bed', $bedNo);
 	$hotelFeatures = dbhandler::getAssocArray('sustain_certified', $sustain, 'aircon', $aircon, 'meeting_rm', $meeting,
 	'pets_allowed', $pets, 'restaurant', $restaurant, 'car_park', $carpark, 'internet', $internet, 'child_facility', $child,
@@ -41,7 +46,7 @@
 	$bookingInfo = dbhandler::getAssocArray('checkin', $arrival, 'checkout', $departure_date);
 
 	$dbh = new dbhandler();
-	$hotels = $dbh->findHotels($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+	$hotels = $dbh->findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
 
-	displayHotel($hotels);
+	displayHotel($hotels[0]);
 ?>

@@ -4,7 +4,7 @@ class dbhandler {
 	// For security we can store these information outside the document
 	// root but for simplicity we just store it here for now.
 	private static $username = 'root';
-	private static $password = '789789789';
+	private static $password = '';
 	private static $server = 'localhost';
 	private static $database = 'CS2102';
 
@@ -63,7 +63,11 @@ class dbhandler {
 			$dbh->beginTransaction();
 			foreach ($this->queryQueue as $query) {
 				$aResult = $dbh->query($query);
-				array_push($queryResults, $aResult->fetchAll());
+				$resultArray = $aResult->fetchAll();
+				if (empty($resultArray)) {
+					throw new Exception("Empty query result");
+				}
+				array_push($queryResults, $resultArray);
 			}
 			$dbh->commit();
 			$this->queryQueue = array();
@@ -360,8 +364,8 @@ class dbhandler {
 
 	//----------------------Useful functions------------------------------------
 	public static function getAssocArray() {
-		$args = func_get_arg();
-		$iter = $args->getIterator();
+		$args = func_get_args();
+		$iter = new ArrayIterator($args);
 		$rv = array();
 		while ($iter->valid()) {
 			$attr = $iter->current();
@@ -369,7 +373,7 @@ class dbhandler {
 			$value = $iter->current();
 			$iter->next();
 			if ($value != '' && $value != 0) {
-				$rv[$attr] = $iter;
+				$rv[$attr] = $value;
 			}
 		}
 		return $rv;
@@ -384,53 +388,56 @@ class dbhandler {
 		$checkoutDate = $bookingInfo['checkout'];
 		// Get available rooms from matching hotels
 		$findRoomCountQuery = <<<EOD
-SELECT h.hotelid, f.room_count
+SELECT f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
 FROM hotel h, facility f
 WHERE h.hotelid=f.hotelid
 EOD;
 		// Fill in the optional information
 		foreach ($hotelInfo as $attr => $value) {
-			$findRoomCountQuery .= " AND $attr LIKE '%$value%'";
+			if (strcmp($attr, "star") != 0) {
+				$findRoomCountQuery .= " AND h.$attr LIKE '%$value%'";
+			} else {
+				$findRoomCountQuery .= " AND h.$attr=$value";
+			}
 		}
 		foreach ($roomInfo as $attr => $value) {
-			$findRoomCountQuery .= " AND $attr = $value";
+			$findRoomCountQuery .= " AND f.$attr = $value";
 		}
 		foreach ($hotelFeatures as $attr => $value) {
-			$findRoomCountQuery .= " AND $attr = $value";
+			$findRoomCountQuery .= " AND h.$attr = $value";
 		}
-		$findRoomCountQuery .= " " <<<EOD
-GROUP BY h.hotelid
+		$findRoomCountQuery .= " ". <<<EOD
+GROUP BY f.hotelid, f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
 HAVING f.room_count > (
 	SELECT SUM(r.count)
-	FROM facility f, reserve r, booking b
+	FROM reserve r, booking b
 	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
 	AND r.no_bed=f.no_bed AND r.ref=b.ref AND
-	((b.checkout>$checkinDate AND b.checkout<$checkoutDate) OR
-		(b.checkin>$checkinDate AND b.checkin<$checkoutDate) OR
-		(b.checkin<$checkinDate AND b.checkout>$checkoutDate)))
-ORDER BY h.hotelid ASC
+	((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
+		(b.checkin>'$checkinDate' AND b.checkin<'$checkoutDate') OR
+		(b.checkin<'$checkinDate' AND b.checkout>'$checkoutDate')))
 EOD;
 		
 		// Get reserved number of rooms of the same type
 		$findReserveCountQuery = <<<EOD
-SELECT SUM(r.count), r.hotelid, r.room_class, r.bed_size, r.no_bed
+SELECT SUM(r.count) as rCount, r.hotelid, r.room_class, r.bed_size, r.no_bed
 FROM facility f, reserve r, booking b
 WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
 AND r.no_bed=f.no_bed AND r.ref=b.ref AND
-((b.checkout>$checkinDate AND b.checkout<$checkoutDate) OR
-	(b.checkin>$checkinDate AND b.checkin<$checkoutDate) OR
-	(b.checkin<$checkinDate AND b.checkout>$checkoutDate))
+((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
+	(b.checkin>'$checkinDate' AND b.checkin<'$checkoutDate') OR
+	(b.checkin<'$checkinDate' AND b.checkout>'$checkoutDate'))
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
 EOD;
 		$joinResults = <<<EOD
-SELECT ro.hotelid, ro.room_class, ro.bed_size, ro.no_bed, ro.count - re.rCount
+SELECT ro.hotelid, ro.room_class, ro.bed_size, ro.no_bed, ro.room_count - re.rCount AS availability
 FROM ($findRoomCountQuery) AS ro
 JOIN ($findReserveCountQuery) AS re
-ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = re.bed_size AND ro.no_bed
- = re.no_bed;
+ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = re.bed_size AND ro.no_bed = re.no_bed;
 EOD;
+		echo "<p> $joinResults </p>";
 		$this->queueQuery($joinResults);
-		return $this.sendQueries();
+		return $this->sendQueries();
 	}
 	/**
 	 * changeUserNamePassword

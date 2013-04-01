@@ -32,7 +32,7 @@ FROM (
 	GROUP BY h.hotelid, f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
 	HAVING f.room_count > (
 		SELECT SUM(r.count)
-		FROM facility f, reserve r, booking b
+		FROM facility f2, reserve r, booking b
 		WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size AND r.no_bed=f.no_bed AND r.ref=b.ref AND
 		b.checkin > '2013-01-31' AND b.checkout < '2013-02-12')) AS ro
 JOIN (
