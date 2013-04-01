@@ -1,4 +1,10 @@
 <?php
+//set uo according to your own machine setting
+$localhost = '127.0.0.1';
+$mysql_user_name = 'root';
+$mysql_password  = '';
+$schema = 'CS2102';
+
 function clear($message)
 {
 	if(!get_magic_quotes_gpc())
@@ -11,8 +17,9 @@ function clear($message)
 }
 if ($_POST['submit'])
 {
-	 	mysql_connect('127.0.0.1','root','');
-	   mysql_select_db('CS2102');
+	   mysql_connect($localhost,$mysql_user_name,$mysql_password);
+	   mysql_select_db($schema);
+
 	   $name = clear($_POST['name']);
 	   $email = clear($_POST['email']);
 	   $password = clear($_POST['password']);

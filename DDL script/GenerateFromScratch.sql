@@ -1,12 +1,13 @@
 /* Generate everything */
 
 /* First clear all data */
+/*
 DROP TABLE reserve;
 DROP TABLE booking;
 DROP TABLE user;
 DROP TABLE facility;
 DROP TABLE hotel;
-
+*/
 /* Second create the tables */
 CREATE TABLE hotel(
 hotelid INT PRIMARY KEY AUTO_INCREMENT,
