@@ -85,7 +85,7 @@ else
 	</tr>
 
 	<?php
-require 'Modules/dbhandler.php';
+require '../Modules/dbhandler.php';
 $country = $_POST["country"]; 
 $city = $_POST["city"];		  
 $street = $_POST["street"];
