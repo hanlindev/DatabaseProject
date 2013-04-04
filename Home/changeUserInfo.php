@@ -1,9 +1,7 @@
 <?php
 //set uo according to your own machine setting
-$localhost = '127.0.0.1';
-$mysql_user_name = 'root';
-$mysql_password  = '';
-$database_name = 'CS2102';
+include('config.php');
+
 
 session_start();
 function clear($message)
@@ -25,7 +23,7 @@ else
 	$email = clear($_SESSION['login'][0]); 
 	$password = clear($_SESSION['login'][1]);
 	mysql_connect($localhost,$mysql_user_name,$mysql_password);
-	mysql_select_db($database_name);
+	mysql_select_db($schema);
 	
 	$sql = mysql_query("SELECT * FROM user WHERE email = '$email' AND password = '$password'");
 	$row = mysql_fetch_array($sql);

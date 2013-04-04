@@ -1,9 +1,7 @@
 <?php
 //set uo according to your own machine setting
-$localhost = '127.0.0.1';
-$mysql_user_name = 'root';
-$mysql_password  = '';
-$schema = 'CS2102';
+include('config.php');
+
 
 function clear($message)
 {
@@ -23,7 +21,7 @@ if ($_POST['submit'])
 	   $name = clear($_POST['name']);
 	   $email = clear($_POST['email']);
 	   $password = clear($_POST['password']);
-	   $sql = mysql_query("SELECT * FROM user WHERE email = '$eamil'");
+	   $sql = mysql_query("SELECT * FROM user WHERE email = '$email'");
 	if (!mysql_fetch_array($sql))
 	{
 		$password = sha1($_POST['password']);

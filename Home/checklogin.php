@@ -1,10 +1,7 @@
 <?php
 
-	//set uo according to your own machine setting
-	$localhost = '127.0.0.1';
-	$mysql_user_name = 'root';
-	$mysql_password  = '';
-	$database_name = 'CS2102';
+//set uo according to your own machine setting
+include('config.php');
 
 	ob_start();
 	session_start();
@@ -29,7 +26,7 @@
 	else if ($_POST['submit'])
 	{
 		mysql_connect($localhost,$mysql_user_name,$mysql_password);
-		mysql_select_db($database_name);
+		mysql_select_db($schema);
 
 		$email = clear($_POST['email']);
 		$password = clear($_POST['password']);
@@ -40,7 +37,7 @@
 			session_regenerate_id(true);
 			ob_end_clean();
 			echo "Successfully Logged In!\n";
-			echo 'Welcome ' . $output['email']."\n";
+			echo 'Welcome ' . $output['user_name']."\n";
 			//echo 'isAdmin'.$output['isAdmin'];
 			echo '<a href="?log=off">log off</a>'."\n";
 			

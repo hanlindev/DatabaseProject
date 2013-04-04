@@ -1,48 +1,53 @@
-
 <!DOCTYPE html>
 
-<html><head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<title>Room Booking System</title>
-		<link rel="stylesheet" href="css/style.css" type="text/css" />
-	</head>
-	<body>
-		<div id="header">
-			<ul id="navigation">
-				<li>
-					<a href="index.html" id="home">Home</a>
-				</li>
-				<li>
-					<a href="about.html" id="email">Email</a>
-				</li>
-			</ul>
-			<p>CS2102 Project Group 8</p>
-		  <div id="featured">            
-
-		    <div class="first"></div>
-	
-				  <div>
-				    <h3>Sign Up</h3>
-                        <form action="signup.php" method="post">
-                            Username:<input name="name" type="text" id="name" size="15" />
-                            Email:<input name="email" type="text" id="email" size="15" />
-                            Password:<input type="password" name="password" size="15" />
-                            <input type="submit" name="submit" value="Sign Up" />
-                    	</form>
-				</div>
-                <div>
-                	<h3>Sign In</h3>
-                    <form method=post action="checklogin.php">
-                       <input id="email" name="email" type="text" value="User Email" size="15" />
-                       <input id="password"name="password" type="password" value="Password" size="15" />
-                       <input type="submit" id="submit" name="submit" value="Log In" />
-                    </form>
-                </div>
-                
-			    </div>
-				</div>
-		  </div>
-		</div> 
-
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Room Booking System</title>
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+</head>
+<body>
+	<div id="header">
+		<ul id="navigation">
+			<li>
+				<a href="index.html" id="home">Home</a>
+			</li>
+			<li>
+				<a href="about.html" id="email">Email</a>
+			</li>
+		</ul>
+		<p>CS2102 Project Group 8</p>
+		<div id="featured">
+			<div>
+				<h3>Sign In</h3>
+				<form method=post action="checklogin.php">
+					<input id="email" name="email" type="text" value="User Email" size="15" />
+					<input id="password"name="password" type="password" value="Password" size="15" />
+					<input type="submit" id="submit" name="submit" value="Log In" />
+				</form>
+				<button id="hidr">Don't Have An Account?Click Here to Sign Up</button>
+				<span>
+					<h3>Sign Up</h3>
+					<form action="signup.php" method="post">
+						Username:
+						<input name="name" type="text" id="name" size="15" />
+						Email:
+						<input name="email" type="text" id="email" size="15" />
+						Password:
+						<input type="password" name="password" size="15" />
+						<input type="submit" name="submit" value="Sign Up" />
+					</form>
+				</span>
+			</div>
+		</div>
+	</div>
 </body>
-</html>  
+</html>
+<script>
+$("span").hide();
+$("#hidr").click(function () {
+  $("span").show();
+});
+
+</script>
