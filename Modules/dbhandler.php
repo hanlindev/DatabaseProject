@@ -62,14 +62,6 @@ class dbhandler {
 			$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$dbh->beginTransaction();
 
-			// begin for debugging
-			foreach($this->queryQueue as $query) {
-				echo "<p>$query</p>";
-			}
-
-			$counter = 0;
-			// end for debugging
-
 			foreach ($this->queryQueue as $query) {
 				// Check query type
 				$queryType = $this->getQueryType($query);
@@ -96,7 +88,6 @@ class dbhandler {
 			$this->queryQueue = array();
 			return $queryResults;
 		} catch(Exception $e) {
-			echo 'Caught exception: ',  $e->getMessage(), "\n";
 			$dbh->rollBack();
 			throw $e;
 		}
@@ -456,8 +447,8 @@ EOD;
 		if (!empty($checkinDate) && !empty($checkoutDate)) {
 			$timeCondition .=<<<EOD
 AND ((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
-		(b.checkin>'$checkinDate' AND b.checkin<'$checkoutDate') OR
-		(b.checkin<'$checkinDate' AND b.checkout>'$checkoutDate'))
+		(b.checkin>='$checkinDate' AND b.checkin<'$checkoutDate') OR
+		(b.checkin<='$checkinDate' AND b.checkout>='$checkoutDate'))
 EOD;
 		}
 		$findRoomCountQuery = <<<EOD
@@ -534,6 +525,7 @@ EOD;
 		$checkout = "'$checkout'";
 		$ref = $this->generateRef();
 		$ref = "'$ref'";
+		
 		// Queue insert into booking query
 		$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "'success'");
 
