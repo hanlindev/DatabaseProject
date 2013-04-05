@@ -50,32 +50,32 @@ require '../Modules/dbhandler.php';
 =            Collecting Data Using POST Method            =
 =========================================================*/
 
-$country = $_POST["country"]; 
-$city = $_POST["city"];		  
-$street = $_POST["street"];
-$no_reserving = $_POST["no_reserving"];
-$star = $_POST['star'];
-$roomClass = $_POST['room_class'];
-$bedSize = $_POST['bed_size'];
-$bedNo = $_POST['bed_no'];
-$sustain = $_POST['sustain'];
-$aircon = $_POST['aircon'];
-$meeting = $_POST['meeting'];
-$pets = $_POST['pets'];
-$restaurant = $_POST['restaurant'];
-$carpark = $_POST['carpark'];
-$internet = $_POST['internet'];
-$child = $_POST['child'];
-$nosmoking = $_POST['nosmoking'];
-$bizcentre = $_POST['bizcentre'];
-$disabled = $_POST['disabled'];
-$fitness = $_POST['fitness'];
-$swim = $_POST['swim'];
+$country         = $_POST["country"]; 
+$city            = $_POST["city"];		  
+$street          = $_POST["street"];
+$no_reserving    = $_POST["no_reserving"];
+$star            = $_POST['star'];
+$roomClass       = $_POST['room_class'];
+$bedSize         = $_POST['bed_size'];
+$bedNo           = $_POST['bed_no'];
+$sustain         = $_POST['sustain'];
+$aircon          = $_POST['aircon'];
+$meeting         = $_POST['meeting'];
+$pets            = $_POST['pets'];
+$restaurant      = $_POST['restaurant'];
+$carpark         = $_POST['carpark'];
+$internet        = $_POST['internet'];
+$child           = $_POST['child'];
+$nosmoking       = $_POST['nosmoking'];
+$bizcentre       = $_POST['bizcentre'];
+$disabled        = $_POST['disabled'];
+$fitness         = $_POST['fitness'];
+$swim            = $_POST['swim'];
 $thalassotherapy = $_POST['thalassotherapy'];
-$golf = $_POST['golf'];
-$tennis = $_POST['tennis'];
-$checkin_date = $_POST['checkin_date'];
-$checkout_date = $_POST['checkout_date'];
+$golf            = $_POST['golf'];
+$tennis          = $_POST['tennis'];
+$checkin_date    = $_POST['checkin_date'];
+$checkout_date   = $_POST['checkout_date'];
 
 
 /*-----  End of Collecting Data Using POST Method  ------*/
@@ -109,13 +109,13 @@ if (!$hotels) {
 } else {
 	foreach($hotels as $row) {
 		if ($no_reserving<=$availability){
-			$hotelid = $row["hotelid"];
+			$hotelid      = $row["hotelid"];
 			$availability = $row["availability"];
 			$availability = (empty($availability)) ? $row["room_count"] : $availability;
-			$room_class = $row['room_class'];
-			$bed_size = $row['bed_size'];
-			$no_bed = $row['no_bed'];
-			//$hotelname = $row['hotelname'];
+			$room_class   = $row['room_class'];
+			$bed_size     = $row['bed_size'];
+			$no_bed       = $row['no_bed'];
+			$hotelname    = $row['hotelname'];
 
 			echo "
 					<tr>
@@ -125,7 +125,7 @@ if (!$hotels) {
 						<td>$bed_size</td>
 						<td>$no_bed</td>
 						<td>
-							<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&checkin_date=".$checkin_date."&checkout_date=".$checkout_date."&no_reserving=".$no_reserving.'\'">Book</button>
+							<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&checkin_date=".$checkin_date."&checkout_date=".$checkout_date."&no_reserving=".$no_reserving."&hotelname=".$hotelname.'\'">Book</button>
 						</td>
 					</tr>
 					';
