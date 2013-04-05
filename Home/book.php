@@ -9,6 +9,8 @@ include ('pageaccess.php');
 include('config.php');
 //include dbhandler
 require '../Modules/dbhandler.php';
+//include value name mapping function
+require 'valuenamemapping.php';
 
 
 /*-----  End of Include Files  ------*/
@@ -18,14 +20,15 @@ require '../Modules/dbhandler.php';
 /*=========================================================
 =            Collecting Data Using POST Method            =
 =========================================================*/
-$hotelid = $_GET['hotelid'];
-$availability = $_GET['availability'];
-$room_class = $_GET['room_class'];
-$bed_size = $_GET['bed_size'];
-$no_bed = $_GET['no_bed'];
-$checkin_date = $_GET['checkin_date'];
+$hotelid       = $_GET['hotelid'];
+$availability  = $_GET['availability'];
+$room_class    = $_GET['room_class'];
+$bed_size      = $_GET['bed_size'];
+$no_bed        = $_GET['no_bed'];
+$checkin_date  = $_GET['checkin_date'];
 $checkout_date = $_GET['checkout_date'];
-$no_reserving = $_GET['no_reserving'];
+$no_reserving  = $_GET['no_reserving'];
+$hotelname     = $_GET['hotelname'];
 //For debuging
 /*
 echo 'hotelid'.$hotelid."\n";
@@ -48,7 +51,8 @@ echo 'no_reserving'.$no_reserving."\n";
 
 $dbh = new dbhandler();
 if ($dbh->placeBooking($email, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin_date, $checkout_date)){
-	echo 'Your booking has been successully placed';
+	echo 'Your booking has been successully placed'."<br/>";
+	echo 'You Have booked '.$no_reserving.' '.getRoomClassName($room_class).' rooms with '.$no_bed.' '.getBedSizeName($bed_size).' beds in .'.$hotelname."<br/>";
 }
 else {
 	echo 'Your booking has failed! ';
