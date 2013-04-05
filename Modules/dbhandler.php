@@ -467,5 +467,19 @@ EOD;
 	public function changeUserNamePassword($email, $name, $password) {
 		// TODO implement this
 	}
+
+	/**
+	 * placeBooking
+	 * @param userid is the email of the user that is the primary key of the user table
+	 * @param hotelid, room_class, bed_size and no_bed together are the primary key of the facility table
+	 * @param no_reserving is the number of rooms of this type that the user is going to book
+	 * @param checkin and checkout are the dates when the user checkin and out
+	 * @return true if the booking is confirmed or false if it fails, most probably because there is no more vacancy
+	 * It will take the information of the room and the booking as parameters. Then it will generate a ref from the id
+	 * and time of booking.
+	 */
+	public function placeBooking($userid, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin, $checkout) {
+		
+	}
 }
 ?>
