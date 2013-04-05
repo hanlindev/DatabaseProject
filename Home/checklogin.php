@@ -1,4 +1,11 @@
 <?php
+/**
+*
+* This PHP script checks if the user has successfully logined in to system
+* User will be redirected back to the login page if he fails to login
+* User will be given a link to home page if he logins in
+*
+**/
 
 //set uo according to your own machine setting
 include('config.php');

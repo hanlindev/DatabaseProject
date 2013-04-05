@@ -1,4 +1,11 @@
 <?php
+/**
+*
+* This PHP script add the user information to the database system
+* including the user name, use email (which is also the uid) and password
+*
+**/
+
 //set uo according to your own machine setting
 include('config.php');
 

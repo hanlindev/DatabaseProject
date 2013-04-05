@@ -1,5 +1,5 @@
 <?php
-//set uo according to your own machine setting
+//set up according to your own machine setting
 include('config.php');
 
 

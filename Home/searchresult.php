@@ -1,95 +1,59 @@
 <?php
-//set uo according to your own machine setting
-include('config.php');
-
-session_start();
-function clear($message)
-{
-	if(!get_magic_quotes_gpc())
-		$message = addslashes($message);
-	
-	$message = strip_tags($message);
-	$message = htmlentities($message);
-	return trim($message);
-}
-if(!$_SESSION['login'])
-{
-	header('Location: index.html');
-	exit;
-}
-else
-{
-	$email = clear($_SESSION['login'][0]); 
-	$password = clear($_SESSION['login'][1]);
-	mysql_connect($localhost,$mysql_user_name,$mysql_password);
-	mysql_select_db($schema);
-	$sql = mysql_query("SELECT * FROM user WHERE email = '$email' AND password = '$password'");
-	$row = mysql_fetch_array($sql);
-	if($row&&!$row['isAdmin']){
-		echo 'Welcome '.$row['user_name'];
-		echo '<a href="checklogin?log=off">log off</a>
-';
-
-	}
-	else if ($row&&$row['isAdmin']){
-		echo "You are admin";
-		echo '
-<a href="checklogin?log=off">log off</a>
-';
-	}
-	else 
-	{
-		header('Location: index.html');
-		exit;
-	}
-}
+//Check if the current user have the access to current page
+include ('pageaccess.php');
 ?>
+
 <!DOCTYPE html>
 
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Hotel Booking</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Hotel Booking</title>
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body>
 
-<div class="header">
-	<ul id="navigation">
-		<li>
-			<a href="home.php" id="home">Home</a>
-		</li>
-		<li>
-			<a href="about.php" id="email">About</a>
-		</li>
-		<li>
-			<a href="userpage.php" id="user">My Account</a>
-		</li>
-	</ul>
-	<p>CS2102 Project Group 8</p>
-</div>
+	<div class="header">
+		<ul id="navigation">
+			<li>
+				<a href="home.php" id="home">Home</a>
+			</li>
+			<li>
+				<a href="about.php" id="email">About</a>
+			</li>
+			<li>
+				<a href="userpage.php" id="user">My Account</a>
+			</li>
+		</ul>
+		<p>CS2102 Project Group 8</p>
+	</div>
 
-<table border = "1" style = " position: fixed;
+	<table border = "1" style = " position: fixed;
   top: 40%;
   left: 40%;
   margin-top: -50px;
   margin-left: -100px;">
-	<tr>
-		<th>Hotel ID</th>
-		<th>Availability</th>
-		<th>Room Class</th>
-		<th>Bed Size</th>
-		<th>No of Beds</th>
-		<th>Book</th>
-	</tr>
+		<tr>
+			<th>Hotel ID</th>
+			<th>Availability</th>
+			<th>Room Class</th>
+			<th>Bed Size</th>
+			<th>No of Beds</th>
+			<th>Book</th>
+		</tr>
 
-	<?php
+<?php
 require '../Modules/dbhandler.php';
+
+/*=========================================================
+=            Collecting Data Using POST Method            =
+=========================================================*/
+
 $country = $_POST["country"]; 
 $city = $_POST["city"];		  
 $street = $_POST["street"];
-$no_to_book = $_POST["no_to_book"];
+$no_reserving = $_POST["no_reserving"];
 $star = $_POST['star'];
 $roomClass = $_POST['room_class'];
 $bedSize = $_POST['bed_size'];
@@ -113,6 +77,13 @@ $tennis = $_POST['tennis'];
 $arrival_date = $_POST['arrival_date'];
 $departure_date = $_POST['departure_date'];
 
+
+/*-----  End of Collecting Data Using POST Method  ------*/
+
+/*===========================================================
+=            Call Search Function From dbhandler            =
+===========================================================*/
+
 $hotelInfo = dbhandler::getAssocArray('country', $country, 'city', $city, 'street', $street, 'star', $star);
 $roomInfo = dbhandler::getAssocArray('room_class', $roomClass, 'bed_size', $bedSize, 'no_bed', $bedNo);
 $hotelFeatures = dbhandler::getAssocArray('sustain_certified', $sustain, 'aircon', $aircon, 'meeting_rm', $meeting,
@@ -122,38 +93,49 @@ $hotelFeatures = dbhandler::getAssocArray('sustain_certified', $sustain, 'aircon
 $bookingInfo = dbhandler::getAssocArray('checkin', $arrival_date, 'checkout', $departure_date);
 
 $dbh = new dbhandler();
-$hotels = $dbh->
-	findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+$hotels = $dbh->findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+
+/*-----  End of Call Search Function From dbhandler  ------*/
+
+
+/*=================================================
+=            Build Search Result Table            =
+=================================================*/
+
 if (!$hotels) {
 	echo "
-	<p>Oops no hotel</p>
-	";
+		<p>Oops no hotel</p>
+		";
 } else {
-foreach($hotels as $row) {
-	$hotelid = $row["hotelid"];
-	$availability = $row["availability"];
-	$availability = (empty($availability)) ? $row["room_count"] : $availability;
-	$room_class = $row['room_class'];
-	$bed_size = $row['bed_size'];
-	$no_bed = $row['no_bed'];
-	//$hotelname = $row['hotelname'];
+	foreach($hotels as $row) {
+		if ($no_reserving<=$availability){
+			$hotelid = $row["hotelid"];
+			$availability = $row["availability"];
+			$availability = (empty($availability)) ? $row["room_count"] : $availability;
+			$room_class = $row['room_class'];
+			$bed_size = $row['bed_size'];
+			$no_bed = $row['no_bed'];
+			//$hotelname = $row['hotelname'];
 
-echo "
-	<tr>
-		<td>$hotelid</td>
-		<td>$availability</td>
-		<td>$room_class</td>
-		<td>$bed_size</td>
-		<td>$no_bed</td>
-		<td>
-			<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&arrival_date=".$arrival_date."&departure_date=".$departure_date."&no_to_book=".$no_to_book.'\'">Book</button>
-		</td>
-	</tr>
-	';
+			echo "
+					<tr>
+						<td>$hotelid</td>
+						<td>$availability</td>
+						<td>$room_class</td>
+						<td>$bed_size</td>
+						<td>$no_bed</td>
+						<td>
+							<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&arrival_date=".$arrival_date."&departure_date=".$departure_date."&no_reserving=".$no_reserving.'\'">Book</button>
+						</td>
+					</tr>
+					';
+		}
+	}
 }
-}
+
+/*-----  End of Build Search Result Table  ------*/
    	 	
 ?>
-</table>
+	</table>
 </body>
 </html>
