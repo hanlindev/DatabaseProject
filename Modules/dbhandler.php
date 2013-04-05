@@ -104,7 +104,7 @@ class dbhandler {
 		$rowInfoString = dbhandler::getCommaSeparatedString($rowInfo);
 
 		$queryContent = " INSERT INTO $tableName($attrListString) VALUES($rowInfoString);";
-		return $this->queueQuery($queryContent);
+		return $queryContent;
 	}
 
 	/**
@@ -502,6 +502,7 @@ EOD;
 	 * Reference: http://www.redtamo.com/default/create_order_sn.html
 	 */
 	private function generateRef() {
+		date_default_timezone_set('Asia/Singapore');
 		$year_code = array('A','B','C','D','E','F','G','H','I','J');
 		$order_sn = $year_code[intval(date('Y'))-2010].
 		strtoupper(dechex(date('m'))).date('d').
