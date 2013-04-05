@@ -421,7 +421,7 @@ AND ((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
 EOD;
 		}
 		echo "$timeCondition";//for debugging
-		$findRoomCountQuery .= <<<EOD
+		$findRoomCountQuery = <<<EOD
 $roomConditions
 GROUP BY f.hotelid, f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
 HAVING f.room_count > (
@@ -432,9 +432,9 @@ HAVING f.room_count > (
 UNION
 $roomConditions AND NOT EXISTS(
 	SELECT *
-	FROM reserve r
+	FROM reserve r, booking b
 	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size AND
-			r.no_bed=f.no_bed $timeCondition)
+			r.no_bed=f.no_bed AND r.ref=b.ref $timeCondition)
 EOD;
 		
 		// Get reserved number of rooms of the same type
