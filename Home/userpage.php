@@ -44,15 +44,9 @@ include ('pageaccess.php');
 				<h3>My booking history</h3>
 				<?php 
 					//use php code to get the list of all bookings
-					echo 	
+						
 			?></div>
 		</div>
-		<div>
-			<h3>My booking history</h3>
-			<?php 
-						//use php code to get the list of all bookings
-			?></div>
-	</div>
 </div>
 
 </body>
