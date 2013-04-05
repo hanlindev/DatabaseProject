@@ -422,6 +422,12 @@ class dbhandler {
 	 *         associative array with column names as indices
 	 */
 	public function findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo) {
+		$this->findAvailableRoomsQuery($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+		$rv = $this->sendQueries();
+		return $rv[0];
+	}
+
+	private function findAvailableRoomsQuery($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo) {
 		$checkinDate = $bookingInfo['checkin'];
 		$checkoutDate = $bookingInfo['checkout'];
 		// Get available rooms from matching hotels
@@ -485,10 +491,7 @@ FROM ($findRoomCountQuery) AS ro
 LEFT JOIN ($findReserveCountQuery) AS re
 ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = re.bed_size AND ro.no_bed = re.no_bed;
 EOD;
-		echo "<p> $joinResults </p>";
 		$this->queueQuery($joinResults);
-		$rv = $this->sendQueries();
-		return $rv[0];
 	}
 	/**
 	 * changeUserNamePassword
@@ -512,6 +515,20 @@ EOD;
 	 * and time of booking.
 	 */
 	public function placeBooking($userid, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin, $checkout) {
+		// Check for availability first if no room with the specified primary keys, the the transaction will fail early
+		// This is to prevent conflicting with other bookings placed when the current use is making his decision.
+		$hotelInfo = array();// empty because we already has a hotelid
+		$roomInfo = array();
+		$hotelFeatures = array();// same as hotelInfo
+		$bookingInfo = array();
+		$roomInfo["hotelid"] = $hotelid;
+		$roomInfo["room_class"] = $room_class;
+		$roomInfo["bed_size"] = $bed_size;
+		$roomInfo["no_bed"] = $no_bed;
+		$bookingInfo["checkin"] = $checkin;
+		$bookingInfo["checkout"] = $checkout;
+		$this->findAvailableRoomsQuery($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+
 		$userid = "'$userid'";
 		$checkin = "'$checkin'";
 		$checkout = "'$checkout'";
