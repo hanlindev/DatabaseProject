@@ -39,7 +39,7 @@ class dbhandler {
 	/**
 	 * sendQueries
 	 * @return query results of all queued queries as an array if transaction is successful,
-	 *         false if transaction failed.
+	 *         throws exception when query fails.
 	 *         Each element in the array is an array of rows in the result set indexed by the
 	 *         column names as well as 0-indexed column numbers.
 	 */
@@ -61,21 +61,55 @@ class dbhandler {
 			$queryResults = array();
 			$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$dbh->beginTransaction();
+
+			// begin for debugging
+			foreach($this->queryQueue as $query) {
+				echo "<p>$query</p>";
+			}
+
+			$counter = 0;
+			// end for debugging
+
 			foreach ($this->queryQueue as $query) {
-				$aResult = $dbh->query($query);
-				$resultArray = $aResult->fetchAll();
-				if (empty($resultArray)) {
-					throw new Exception("Empty query result");
+				// Check query type
+				$queryType = $this->getQueryType($query);
+				$aResult;
+
+				if (strcmp($queryType, "SELECT") == 0) 
+				{
+					$aResult = $dbh->query($query);
+					$resultArray = $aResult->fetchAll();
+					if (empty($resultArray)) {
+						throw new Exception("Empty query result");
+					}
+					array_push($queryResults, $resultArray);
+				} else {
+					$aResult = $dbh->exec($query);
+					if ($aResult == 0) {
+						throw new Exception("Empty query result");
+					} else {
+						array_push($queryResults, true);
+					}
 				}
-				array_push($queryResults, $resultArray);
 			}
 			$dbh->commit();
 			$this->queryQueue = array();
 			return $queryResults;
 		} catch(Exception $e) {
+			echo 'Caught exception: ',  $e->getMessage(), "\n";
 			$dbh->rollBack();
-			return false;
+			throw $e;
 		}
+	}
+
+	/**
+	 * getQueryType
+	 * @param query is the query string
+	 * @return the first word in the query string which is always the type of query
+	 */
+	private function getQueryType($query) {
+		$arr = explode(' ',trim($query));
+		return $arr[0];
 	}
 
 	/**
@@ -104,6 +138,7 @@ class dbhandler {
 		$rowInfoString = dbhandler::getCommaSeparatedString($rowInfo);
 
 		$queryContent = " INSERT INTO $tableName($attrListString) VALUES($rowInfoString);";
+		$this->queueQuery($queryContent);
 		return $queryContent;
 	}
 
@@ -392,7 +427,7 @@ class dbhandler {
 		// Get available rooms from matching hotels
 		// Get available rooms from matching hotels
 		$roomConditions = <<<EOD
-SELECT f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
+SELECT f.hotelid, h.hotelname, f.room_class, f.bed_size, f.no_bed, f.room_count
 FROM hotel h, facility f
 WHERE h.hotelid=f.hotelid
 EOD;
@@ -413,17 +448,15 @@ EOD;
 		// Construct time conditions
 		$timeCondition = '';
 		if (!empty($checkinDate) && !empty($checkoutDate)) {
-			echo "<p> What!!</p>";//for debugging
 			$timeCondition .=<<<EOD
 AND ((b.checkout>'$checkinDate' AND b.checkout<'$checkoutDate') OR
 		(b.checkin>'$checkinDate' AND b.checkin<'$checkoutDate') OR
 		(b.checkin<'$checkinDate' AND b.checkout>'$checkoutDate'))
 EOD;
 		}
-		echo "$timeCondition";//for debugging
 		$findRoomCountQuery = <<<EOD
 $roomConditions
-GROUP BY f.hotelid, f.hotelid, f.room_class, f.bed_size, f.no_bed, f.room_count
+GROUP BY f.hotelid, h.hotelname, f.room_class, f.bed_size, f.no_bed, f.room_count
 HAVING f.room_count > (
 	SELECT SUM(r.count)
 	FROM reserve r, booking b
@@ -479,14 +512,18 @@ EOD;
 	 * and time of booking.
 	 */
 	public function placeBooking($userid, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin, $checkout) {
-		$ref = $this->generateRef();// TODO implement generateRef method
-
+		$userid = "'$userid'";
+		$checkin = "'$checkin'";
+		$checkout = "'$checkout'";
+		$ref = $this->generateRef();
+		$ref = "'$ref'";
 		// Queue insert into booking query
-		$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "success");
+		$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "'success'");
 
 		// Queue insert into reserve query
 		$this->insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving);
-		$rv = $this->sendQueries;
+
+		$rv = $this->sendQueries();
 		// Return result
 		return (!empty($rv));
 	}
@@ -504,9 +541,9 @@ EOD;
 	private function generateRef() {
 		date_default_timezone_set('Asia/Singapore');
 		$year_code = array('A','B','C','D','E','F','G','H','I','J');
-		$order_sn = $year_code[intval(date('Y'))-2010].
-		strtoupper(dechex(date('m'))).date('d').
-		substr(time(),-5).substr(microtime(),2,5).sprintf('%02d',rand(0,99));
+		$order_sn = $year_code[intval(date('Y'))-2013].
+			strtoupper(dechex(date('m'))).date('d').
+			substr(time(),-5).substr(microtime(),2,5).sprintf('%02d',rand(0,99));
 		return $order_sn;
 	}
 }
