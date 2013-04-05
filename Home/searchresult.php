@@ -74,8 +74,8 @@ $swim = $_POST['swim'];
 $thalassotherapy = $_POST['thalassotherapy'];
 $golf = $_POST['golf'];
 $tennis = $_POST['tennis'];
-$arrival_date = $_POST['arrival_date'];
-$departure_date = $_POST['departure_date'];
+$checkin_date = $_POST['checkin_date'];
+$checkout_date = $_POST['checkout_date'];
 
 
 /*-----  End of Collecting Data Using POST Method  ------*/
@@ -90,7 +90,7 @@ $hotelFeatures = dbhandler::getAssocArray('sustain_certified', $sustain, 'aircon
 'pets_allowed', $pets, 'restaurant', $restaurant, 'car_park', $carpark, 'internet', $internet, 'child_facility', $child,
  'no_smoking', $nosmoking, 'biz_centre', $bizcentre, 'reduced_mobility_rm', $disabled, 'fitness_clus', $fitness,
  'swimming_pool', $swim, 'thalassotherapy_centre', $thalassotherapy, 'golf', $golf, 'tennis', $tennis);
-$bookingInfo = dbhandler::getAssocArray('checkin', $arrival_date, 'checkout', $departure_date);
+$bookingInfo = dbhandler::getAssocArray('checkin', $checkin_date, 'checkout', $checkout_date);
 
 $dbh = new dbhandler();
 $hotels = $dbh->findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
@@ -125,7 +125,7 @@ if (!$hotels) {
 						<td>$bed_size</td>
 						<td>$no_bed</td>
 						<td>
-							<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&arrival_date=".$arrival_date."&departure_date=".$departure_date."&no_reserving=".$no_reserving.'\'">Book</button>
+							<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&checkin_date=".$checkin_date."&checkout_date=".$checkout_date."&no_reserving=".$no_reserving.'\'">Book</button>
 						</td>
 					</tr>
 					';

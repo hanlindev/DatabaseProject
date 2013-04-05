@@ -23,8 +23,8 @@ $availability = $_GET['availability'];
 $room_class = $_GET['room_class'];
 $bed_size = $_GET['bed_size'];
 $no_bed = $_GET['no_bed'];
-$departure_date = $_GET['depature_date'];
-$arrival_date = $_GET['arrival_date'];
+$checkin_date = $_GET['checkin_date'];
+$checkout_date = $_GET['checkout_date'];
 $no_reserving = $_GET['no_reserving'];
 //For debuging
 /*
@@ -34,8 +34,8 @@ echo 'room_class'.$room_class."\n";
 echo 'bed_size'.$bed_size."\n";
 echo 'no_bed'.$no_bed."\n";
 echo 'email'.$email."\n";
-echo 'departure_date'.$departure_date."\n";
-echo 'arrival_date'.$arrival_date."\n";
+echo 'checkout_date'.$checkout_date."\n";
+echo 'checkin_date'.$checkin_date."\n";
 echo 'no_reserving'.$no_reserving."\n";
 */
 
@@ -47,7 +47,7 @@ echo 'no_reserving'.$no_reserving."\n";
 =================================================================*/
 
 $dbh = new dbhandler();
-if ($dbh->placeBooking($email, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $arrival_date, $departure_date)){
+if ($dbh->placeBooking($email, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin_date, $checkout_date)){
 	echo 'Your booking has been successully placed';
 }
 else {

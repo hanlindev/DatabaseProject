@@ -12,6 +12,7 @@ include('config.php');
 
 	ob_start();
 	session_start();
+	error_reporting(E_ERROR | E_PARSE);
 	$log = $_GET['log'];
 	function clear($message)
 	{
