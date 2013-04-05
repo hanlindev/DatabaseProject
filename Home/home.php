@@ -32,7 +32,6 @@ include ('pageaccess.php');
 			</h1>
 			<div class="first"></div>
 			<div>
-
 				<h3>Find A Hotel Room</h3>
 				<button id="hidr">Hide Hotel Features</button>
 				<button id="showr">Show Hotel Features</button>
@@ -85,7 +84,6 @@ include ('pageaccess.php');
 						<option value="5">5</option>
 						<option value="6">6</option>
 					</select>
-
 					<span >
 						Sustainable Certified:
 						<input type="hidden" name="sustain" value="0">
@@ -142,7 +140,22 @@ include ('pageaccess.php');
 					<input id="search" type="submit" value=""/>
 
 				</form>
-
+			</div>
+			<div>
+				<h3>Popular Hotel Rooms</h3>
+				<table>
+					<tr>
+						<th>Rank</th>
+						<th>Hotel Name</th>
+						<th>Room Class</th>
+						<th>Bed Size</th>
+						<th>No of Beds</th>
+						<th>Availability</th>
+						<th>Total Room</th>
+					</tr>
+					<?php
+					require 'drawPopularBookingTable.php';
+		?></table>
 			</div>
 		</div>
 	</div>

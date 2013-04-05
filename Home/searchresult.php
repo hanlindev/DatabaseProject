@@ -45,6 +45,7 @@ include ('pageaccess.php');
 
 <?php
 require '../Modules/dbhandler.php';
+require 'valuenamemapping.php';
 
 /*=========================================================
 =            Collecting Data Using POST Method            =
@@ -108,21 +109,23 @@ if (!$hotels) {
 		";
 } else {
 	foreach($hotels as $row) {
+		$hotelid         = $row["hotelid"];
+		$availability    = $row["availability"];
+		$availability    = (empty($availability)) ? $row["room_count"] : $availability;
+		$room_class      = $row['room_class'];
+		$bed_size        = $row['bed_size'];
+		$no_bed          = $row['no_bed'];
+		$hotelname       = $row['hotelname'];
+		$room_class_name = getRoomClassName($room_class);
+		$bed_size_name   = getBedSizeName($bed_size);
+		
 		if ($no_reserving<=$availability){
-			$hotelid      = $row["hotelid"];
-			$availability = $row["availability"];
-			$availability = (empty($availability)) ? $row["room_count"] : $availability;
-			$room_class   = $row['room_class'];
-			$bed_size     = $row['bed_size'];
-			$no_bed       = $row['no_bed'];
-			$hotelname    = $row['hotelname'];
-
 			echo "
 					<tr>
 						<td>$hotelid</td>
 						<td>$availability</td>
-						<td>$room_class</td>
-						<td>$bed_size</td>
+						<td>$room_class_name</td>
+						<td>$bed_size_name</td>
 						<td>$no_bed</td>
 						<td>
 							<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&checkin_date=".$checkin_date."&checkout_date=".$checkout_date."&no_reserving=".$no_reserving."&hotelname=".$hotelname.'\'">Book</button>

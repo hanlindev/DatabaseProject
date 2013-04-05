@@ -5,7 +5,7 @@
  * @param  int $value integer value representation of room class
  * @return string        a string which is the name of room class
  */
-	public static function getRoomClassName($value)
+	function getRoomClassName($value)
 	{
 		switch ($value) {
 			case 1:		
@@ -35,7 +35,7 @@
  * @param  int $value integer value representation of bed size
  * @return string        a string which represents the bed size
  */
-	public static function getBedSizeName($value)
+	function getBedSizeName($value)
 	{
 		switch ($value) {
 			case 1:
