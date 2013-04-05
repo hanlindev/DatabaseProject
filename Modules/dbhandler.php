@@ -479,7 +479,34 @@ EOD;
 	 * and time of booking.
 	 */
 	public function placeBooking($userid, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin, $checkout) {
-		
+		$ref = $this->generateRef();// TODO implement generateRef method
+
+		// Queue insert into booking query
+		$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "success");
+
+		// Queue insert into reserve query
+		$this->insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving);
+		$rv = $this->sendQueries;
+		// Return result
+		return (!empty($rv));
+	}
+
+	/**
+	 * generateRef
+	 * Generate a 16-char ref string number for this booking without querying the database. The likelyhood of collision with other bookings
+	 * is very low. It can only happen when both of the below conditions are fulfilled.
+	 *    1. More than one order is being processed within a millionth of a second at the same time.
+	 *    2. The two orders generates the same random number in the range of 0 ~ 99
+	 * I believe this is low enough to be acceptable and in case of collision we can just retry more times and the chance
+	 * will approach 0 in a few attempts. So even when it happens, it is not so scary :)
+	 * Reference: http://www.redtamo.com/default/create_order_sn.html
+	 */
+	private function generateRef() {
+		$year_code = array('A','B','C','D','E','F','G','H','I','J');
+		$order_sn = $year_code[intval(date('Y'))-2010].
+		strtoupper(dechex(date('m'))).date('d').
+		substr(time(),-5).substr(microtime(),2,5).sprintf('%02d',rand(0,99));
+		return $order_sn;
 	}
 }
 ?>
