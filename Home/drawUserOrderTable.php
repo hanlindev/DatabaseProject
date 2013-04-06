@@ -2,10 +2,10 @@
 require '../Modules/dbhandler.php';
 require 'valuenamemapping.php';
 	
-public function drawTable($email)
+function drawTable($email)
 {
-	$dbh = new new dbhandler();
-	$booking = $dbh->
+	$dbh = new dbhandler();
+	//$booking = $dbh->
 ;
 
 	if (empty($booking)){
@@ -16,6 +16,7 @@ public function drawTable($email)
 	}
 	else {
 		echo "
+<h3>My booking history</h3>
 <table>
 	<thread>
 		<tr>
