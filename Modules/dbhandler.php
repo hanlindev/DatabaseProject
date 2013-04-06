@@ -564,8 +564,8 @@ EOD;
 	public function topTen() {
 		$query = <<<EOD
 SELECT r.hotelid, h.hotelname, r.room_class, r.bed_size, r.no_bed, SUM(r.count) AS totalCount
-FROM reserve r, hotel h, booking b
-WHERE r.hotelid=h.hotelid AND b.ref=r.ref AND b.status='successful'
+FROM reserve r, hotel h
+WHERE r.hotelid=h.hotelid AND b.ref=r.ref
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
 ORDER BY SUM(r.count) DESC;
 EOD;
@@ -595,7 +595,7 @@ EOD;
 		$queryContent=<<<EOD
 SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.checkin, b.checkout, b.status
 FROM reserve r, hotel h, booking b
-WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='$email'
+WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='$email' AND b.status='successful'
 ORDER BY b.checkin ASC;
 EOD;
 		$this->queueQuery($queryContent);
@@ -631,15 +631,15 @@ EOD;
 	 */
 	public function cancelOrder($ref, $email, $isAdmin) {
 		try {
-			$uid = ($isAdmin)? "": " AND b.uid=$email";
+			$uid = ($isAdmin)? "": " AND uid='$email'";
 			$query = "UPDATE booking SET status='cancelled' WHERE ref='$ref' $uid;";
 			$this->queueQuery($query);
 			$rv = $this->sendQueries();
 			$rv = $rv[0];
-			if ($rv == 0) {
-				return false;
-			} else {
+			if ($rv) {
 				return true;
+			} else {
+				return false;
 			}
 		} catch (Exception $e) {
 			return false;
@@ -657,16 +657,16 @@ EOD;
 	 */
 	public function modifyDate($ref, $email, $isAdmin, $checkin, $checkout) {
 		try {
-			$uid = ($isAdmin)? "": " AND b.uid=$email";
+			$uid = ($isAdmin)? "": " AND uid='$email'";
 			$set = "checkin=$checkin, checkout=$checkout";
 			$where = "ref='$ref' $uid";
 			$this->updateBooking($set, $where);
 			$rv = $this->sendQueries();
 			$rv = $rv[0];
-			if ($rv == 0) {
-				return false;
-			} else {
+			if ($rv) {
 				return true;
+			} else {
+				return false;
 			}
 		} catch(Exception $e) {
 			return false;

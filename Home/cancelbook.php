@@ -3,8 +3,8 @@
 	require '../Modules/dbhandler.php';
 
 	$ref = $_GET['ref'];
-	$dbh = new $dbhandler();
-	if ($dbh->cancelbook($ref, $email, $isAdmin)){
+	$dbh = new dbhandler();
+	if ($dbh->cancelOrder($ref, $email, $isAdmin)){
 		echo "<br/>Order $ref has been succesfully canceled<br/>";
 	}
 	else {
