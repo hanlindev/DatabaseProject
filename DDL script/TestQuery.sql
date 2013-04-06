@@ -48,8 +48,13 @@ insert into booking values(0000002, 'hanlin.ta@gmail.com', 'successful', '2013-0
 
 insert into reserve values(0000002, 1, 1, 3, 1, 10);
 
-SELECT r.hotelid, h.hotelname, r.room_class, r.bed_size, r.no_bed, SUM(r.count)
+SELECT r.hotelid, h.hotelname, r.room_class, r.bed_size, r.no_bed, SUM(r.count) AS totalCount
 FROM reserve r, hotel h
 WHERE r.hotelid=h.hotelid
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
-ORDER BY SUM(r.ref) ASC;
+ORDER BY SUM(r.count) ASC;
+
+SELECT r.ref, h.hotelname, r.room_class, r.count, b.checkin, b.checkout
+FROM reserve r, hotel h, booking b
+WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='hanlin.ta@gmail.com'
+ORDER BY b.checkin ASC;

@@ -585,6 +585,40 @@ EOD;
 		return $rv;
 	}
 
-	
+	/**
+	 * findAllBooking
+	 * @param email is the primary key of the user table
+	 * @return an array of all bookings' information including
+	 *         ref, hotelname, room_class, no_reserving, checkin, checkout
+	 */
+	public function finAllBookingByEmail($email) {
+		$queryContent=<<<EOD
+SELECT r.ref, h.hotelname, r.room_class, r.count, b.checkin, b.checkout
+FROM reserve r, hotel h, booking b
+WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='$email'
+ORDER BY b.checkin ASC;
+EOD;
+		$this->queueQuery($queryContent);
+		$rv = $this->sendQueries();
+		$rv = $rv[0];
+		return $rv;
+	}
+
+	/**
+	 * findAllBooking
+	 * @return an array of all booking records
+	 */
+	public function findAllBooking() {
+		$queryContent=<<<EOD
+SELECT r.ref, h.hotelname, r.room_class, r.count, b.checkin, b.checkout
+FROM reserve r, hotel h, booking b
+WHERE h.hotelid=r.hotelid AND r.ref=b.ref
+ORDER BY b.checkin ASC;
+EOD;
+		$this->queueQuery($queryContent);
+		$rv = $this->sendQueries();
+		$rv = $rv[0];
+		return $rv;
+	}
 }
 ?>
