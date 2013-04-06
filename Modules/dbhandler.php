@@ -418,7 +418,7 @@ class dbhandler {
 		return $rv[0];
 	}
 
-	private function findAvailableRoomsQuery($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo) {
+	private function findAvailableRoomsQuery($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo, $hotelids = NULL) {
 		$checkinDate = $bookingInfo['checkin'];
 		$checkoutDate = $bookingInfo['checkout'];
 		// Get available rooms from matching hotels
@@ -442,6 +442,17 @@ EOD;
 		foreach ($hotelFeatures as $attr => $value) {
 			$roomConditions .= " AND h.$attr = $value";
 		}
+
+		$orHotelids = "";
+		$orz = "";
+		if (!empty($hotelids)) {
+			foreach ($hotelids as $index=>$id) {
+				$orHotelids .= " $orz f.hotelid=$id";
+				$orz = 'OR';
+			}
+			$orHotelid = " AND ($hotelids)";
+		}
+
 		// Construct time conditions
 		$timeCondition = '';
 		if (!empty($checkinDate) && !empty($checkoutDate)) {
@@ -458,7 +469,7 @@ HAVING f.room_count > (
 	SELECT SUM(r.count)
 	FROM reserve r, booking b
 	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
-	AND r.no_bed=f.no_bed AND r.ref=b.ref AND b.status='successful' $timeCondition)
+	AND r.no_bed=f.no_bed AND r.ref=b.ref AND b.status='successful' $orHotelids $timeCondition)
 UNION
 $roomConditions AND NOT EXISTS(
 	SELECT *
@@ -505,36 +516,47 @@ EOD;
 	 * It will take the information of the room and the booking as parameters. Then it will generate a ref from the id
 	 * and time of booking.
 	 */
-	public function placeBooking($userid, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin, $checkout) {
+	public function placeBooking($userid, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin, $checkout, $aRef=NULL) {
 		// Check for availability first if no room with the specified primary keys, the the transaction will fail early
 		// This is to prevent conflicting with other bookings placed when the current use is making his decision.
-		$hotelInfo = array();// empty because we already has a hotelid
-		$roomInfo = array();
-		$hotelFeatures = array();// same as hotelInfo
-		$bookingInfo = array();
-		$roomInfo["hotelid"] = $hotelid;
-		$roomInfo["room_class"] = $room_class;
-		$roomInfo["bed_size"] = $bed_size;
-		$roomInfo["no_bed"] = $no_bed;
-		$bookingInfo["checkin"] = $checkin;
-		$bookingInfo["checkout"] = $checkout;
-		$this->findAvailableRoomsQuery($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+		try {
+			$hotelInfo = array();// empty because we already have a hotelid
+			$roomInfo = array();
+			$hotelFeatures = array();// same as hotelInfo
+			$bookingInfo = array();
+			$roomInfo["hotelid"] = $hotelid;
+			$roomInfo["room_class"] = $room_class;
+			$roomInfo["bed_size"] = $bed_size;
+			$roomInfo["no_bed"] = $no_bed;
+			$bookingInfo["checkin"] = $checkin;
+			$bookingInfo["checkout"] = $checkout;
+			$this->findAvailableRoomsQuery($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
 
-		$userid = "'$userid'";
-		$checkin = "'$checkin'";
-		$checkout = "'$checkout'";
-		$ref = $this->generateRef();
-		$ref = "'$ref'";
-		
-		// Queue insert into booking query
-		$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "'successful'");
+			$userid = "'$userid'";
+			$checkin = "'$checkin'";
+			$checkout = "'$checkout'";
+			$ref = (is_null($aRef)) ? $this->generateRef() : $aRef;
+			$ref = "'$ref'";
+			
+			// Queue insert into booking query
+			if (is_null($aRef)) {
+				// Is no ref is provided, this is a new booking record so we need to create it.
+				$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "'successful'");
+			}
 
-		// Queue insert into reserve query
-		$this->insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving);
+			// Queue insert into reserve query
+			$this->insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving);
 
-		$rv = $this->sendQueries();
-		// Return result
-		return (!empty($rv));
+			$rv = $this->sendQueries();
+			// Return result
+			if (empty($rv)) {
+				return NULL;
+			} else {
+				return $ref;
+			}
+		} catch(Exception $e) {
+			return NULL;
+		}
 	}
 
 	/**
@@ -646,6 +668,7 @@ EOD;
 		}
 	}
 
+
 	/**
 	 * modifyDate
 	 * @param ref
@@ -658,19 +681,49 @@ EOD;
 	public function modifyDate($ref, $email, $isAdmin, $checkin, $checkout) {
 		try {
 			$uid = ($isAdmin)? "": " AND uid='$email'";
-			$set = "checkin=$checkin, checkout=$checkout";
-			$where = "ref='$ref' $uid";
-			$this->updateBooking($set, $where);
-			$rv = $this->sendQueries();
-			$rv = $rv[0];
-			if ($rv) {
-				return true;
-			} else {
-				return false;
+			// This is an array with the following elements "hotelid, room_class, bed_size,
+			// no_bed, count" all indexed by their attribute names
+			$facilitiesBooked = $this->getAllReservation($ref, $email);
+			$this->removeAllReservation($ref);
+
+			// Place the orders again with the new date and if anyone creates a conflict
+			// exception will be thrown and changes rolled back.
+			foreach($facilitiesBooked as $index=>$reserve) {
+				$this->placeBooking($email, $reserve['hotelid'], $reserve['room_class'], $reserve['bed_size'], $reserve['no_bed'], $reserve['count'], $checkin, $checkout, $ref);
 			}
+
+			$this->sendQueries();
+			// Successful
+			return true;
 		} catch(Exception $e) {
 			return false;
 		}
+	}
+
+	/**
+	 * getAllReservation
+	 * @param $ref, $email
+	 * @return an array of rows of reservations with this ref
+	 * it sends the query and returns the result
+	 */
+	private function getAllReservation($ref, $email) {
+		try {
+			$query = "SELECT r.hotelid, r.room_class, r.bed_size, r.no_bed, r.count FROM reserve r, booking b WHERE r.ref='$ref' AND r.ref=b.ref AND b.uid='$email'";
+			$this->queueQuery($query);
+			$rv = $this->sendQueries();
+			$rv = $rv[0];
+			return $rv;
+		} catch(Exception $e) {
+			throw $e;
+		}
+	}
+
+	/**
+	 * removeAllReservation only queue the queries but not send them.
+	 */
+	private function removeAllReservation($ref) {
+		$constraint = "ref='$ref'";
+		$this->deleteFromReserve($constraint);
 	}
 
 }
