@@ -37,7 +37,7 @@ include ('pageaccess.php');
 					<input name="new_user_name" type="text">
 					New Password:
 					<input name="new_password" type="password">
-					<input name="change" type="submit" value=""/>
+					<input name="change" type="submit" value="Submit"/>
 				</form>
 			</div>
 			<div>

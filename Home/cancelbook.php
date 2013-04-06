@@ -2,7 +2,7 @@
 	require 'pageaccess.php';
 	require '../Modules/dbhandler.php';
 
-	$ref = $_POST['ref'];
+	$ref = $_GET['ref'];
 	$dbh = new $dbhandler();
 	if ($dbh->cancelbook($ref, $email, $isAdmin)){
 		echo "<br/>Order $ref has been succesfully canceled<br/>";

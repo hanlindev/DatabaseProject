@@ -630,10 +630,20 @@ EOD;
 	 *        he can only cancel the record with his own email as uid
 	 */
 	public function cancelOrder($ref, $email, $isAdmin) {
-		$uid = ($isAdmin)? "", " AND b.uid=$uid";
-		$query = "UPDATE booking SET status='cancelled' WHERE ref='$ref' $uid;";
-		$this->queueQuery($query);
-		$this->sendQueries();
+		try {
+			$uid = ($isAdmin)? "": " AND b.uid=$uid";
+			$query = "UPDATE booking SET status='cancelled' WHERE ref='$ref' $uid;";
+			$this->queueQuery($query);
+			$rv = $this->sendQueries();
+			$rv = $rv[0];
+			if ($rv == 0) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 }
 ?>
