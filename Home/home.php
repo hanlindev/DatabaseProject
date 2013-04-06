@@ -141,9 +141,10 @@ include ('pageaccess.php');
 
 				</form>
 			</div>
-			<div>
+			<div id="pop_hotel_div">
 				<h3>Popular Hotel Rooms</h3>
-				<table>
+				<table id="popular_search_table" summary="Top 10 Popular Hotel Rooms">
+					<thread>
 					<tr>
 						<th>Rank</th>
 						<th>Hotel Name</th>
@@ -153,9 +154,11 @@ include ('pageaccess.php');
 						<th>Availability</th>
 						<th>Total Room</th>
 					</tr>
+				</thread>
+				<tbody>
 					<?php
 					require 'drawPopularBookingTable.php';
-		?></table>
+		?></tbody></table>
 			</div>
 		</div>
 	</div>

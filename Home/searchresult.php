@@ -13,7 +13,7 @@ include ('pageaccess.php');
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body>
-
+	<h1>Search Result</h1>
 	<div class="header">
 		<ul id="navigation">
 			<li>
@@ -29,21 +29,20 @@ include ('pageaccess.php');
 		<p>CS2102 Project Group 8</p>
 	</div>
 
-	<table border = "1" style = " position: fixed;
-  top: 40%;
-  left: 40%;
-  margin-top: -50px;
-  margin-left: -100px;">
-		<tr>
-			<th>Hotel ID</th>
-			<th>Availability</th>
-			<th>Room Class</th>
-			<th>Bed Size</th>
-			<th>No of Beds</th>
-			<th>Book</th>
-		</tr>
+	<table id="search_result" summary="Search Result Table">
+		<thread>
+			<tr>
+				<th>Hotel ID</th>
+				<th>Availability</th>
+				<th>Room Class</th>
+				<th>Bed Size</th>
+				<th>No of Beds</th>
+				<th>Book</th>
+			</tr>
+		</thread>
+		<tbody>
 
-<?php
+			<?php
 require '../Modules/dbhandler.php';
 require 'valuenamemapping.php';
 
@@ -94,7 +93,8 @@ $hotelFeatures = dbhandler::getAssocArray('sustain_certified', $sustain, 'aircon
 $bookingInfo = dbhandler::getAssocArray('checkin', $checkin_date, 'checkout', $checkout_date);
 
 $dbh = new dbhandler();
-$hotels = $dbh->findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+$hotels = $dbh->
+			findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
 
 /*-----  End of Call Search Function From dbhandler  ------*/
 
@@ -105,8 +105,8 @@ $hotels = $dbh->findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $booki
 
 if (!$hotels) {
 	echo "
-		<p>Oops no hotel</p>
-		";
+			<p>Oops no hotel</p>
+			";
 } else {
 	foreach($hotels as $row) {
 		$hotelid         = $row["hotelid"];
@@ -119,19 +119,20 @@ if (!$hotels) {
 		$room_class_name = getRoomClassName($room_class);
 		$bed_size_name   = getBedSizeName($bed_size);
 		
-		if ($no_reserving<=$availability){
+		if ($no_reserving
+			<=$availability){
 			echo "
 					<tr>
-						<td>$hotelid</td>
-						<td>$availability</td>
-						<td>$room_class_name</td>
-						<td>$bed_size_name</td>
-						<td>$no_bed</td>
-						<td>
-							<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&checkin_date=".$checkin_date."&checkout_date=".$checkout_date."&no_reserving=".$no_reserving."&hotelname=".$hotelname.'\'">Book</button>
-						</td>
-					</tr>
-					';
+				<td>$hotelid</td>
+				<td>$availability</td>
+				<td>$room_class_name</td>
+				<td>$bed_size_name</td>
+				<td>$no_bed</td>
+				<td>
+					<button onclick=\"location.href='book.php?hotelid=".$hotelid."&availability=".$availability."&room_class=".$room_class."&bed_size=".$bed_size."&no_bed=".$no_bed."&checkin_date=".$checkin_date."&checkout_date=".$checkout_date."&no_reserving=".$no_reserving."&hotelname=".$hotelname.'\'">Book</button>
+				</td>
+			</tr>
+			';
 		}
 	}
 }
@@ -139,6 +140,7 @@ if (!$hotels) {
 /*-----  End of Build Search Result Table  ------*/
    	 	
 ?>
+		</tbody>
 	</table>
 </body>
 </html>

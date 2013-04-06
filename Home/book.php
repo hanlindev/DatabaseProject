@@ -52,17 +52,18 @@ echo 'no_reserving'.$no_reserving."\n";
 $dbh = new dbhandler();
 try {
 	if ($dbh->placeBooking($email, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin_date, $checkout_date)){
-		echo 'Your booking has been successully placed'."<br/>";
+		echo '<br/>Your booking has been successully placed<br/>';
 		echo 'You Have booked '.$no_reserving.' '.getRoomClassName($room_class).' rooms with '.$no_bed.' '.getBedSizeName($bed_size).' beds in .'.$hotelname."<br/>";
+		echo '<a href=home.php>Click Here To Go Back To Home Page</a>'."<br/>";
 	}
 	else {
-		echo 'Your booking has failed! ';
-		echo '<a href=home.php>Click Here To Go Back To Home Page</a>';
+		echo '<br/>Your booking has failed! <br/>';
+		echo '<a href=home.php>Click Here To Go Back To Home Page</a>'."<br/>";
 	}
 }  catch(Exception $e) {
 	if (strcmp($e->getMessage(), "Empty query result") == 0) {
-		echo 'We are sorry but we are unable to secure your booking because some other people have taken all vacant rooms.';
-		echo '<a href=home.php>Click Here To Go Back To Home Page</a>';
+		echo 'We are sorry but we are unable to secure your booking because some other people have taken all vacant rooms.<br/>';
+		echo '<a href=home.php>Click Here To Go Back To Home Page</a><br/>';
 	}
 }
 
