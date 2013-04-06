@@ -2,10 +2,10 @@
 require '../Modules/dbhandler.php';
 require 'valuenamemapping.php';
 	
-public function drawTable()
+function drawTable()
 {
 	$dbh = new new dbhandler();
-	$booking = $dbh->
+	$booking = $dbh->findAllBooking();
 ;
 
 	if (empty($booking)){
@@ -36,13 +36,13 @@ public function drawTable()
 		foreach($booking as $row) {
 
 			$ref=$row['ref'];
-			$uid =$row['email'];
 			$hotel_name = $row['hotelname'];
-			$room_clas=$row['room_class'];
+			$room_class=$row['room_class'];
 			$bed_size=$row['bed_size'];
-			$no_reserving = $row['no_reserving'];
-			$checkin_date    = $row['checkin_date'];
-			$checkout_date   = $row['checkout_date'];
+			$no_bed=$row['no_bed'];
+			$no_reserving = $row['count'];
+			$checkin_date    = $row['checkin'];
+			$checkout_date   = $row['checkout'];
 			$room_class_name = getRoomClassName($room_class);
 			$bed_size_name   = getBedSizeName($bed_size);
 

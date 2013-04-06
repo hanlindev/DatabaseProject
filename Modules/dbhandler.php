@@ -591,9 +591,9 @@ EOD;
 	 * @return an array of all bookings' information including
 	 *         ref, hotelname, room_class, no_reserving, checkin, checkout
 	 */
-	public function finAllBookingByEmail($email) {
+	public function findAllBookingByEmail($email) {
 		$queryContent=<<<EOD
-SELECT r.ref, h.hotelname, r.room_class, r.count, b.checkin, b.checkout
+SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.checkin, b.checkout
 FROM reserve r, hotel h, booking b
 WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='$email'
 ORDER BY b.checkin ASC;
@@ -610,7 +610,7 @@ EOD;
 	 */
 	public function findAllBooking() {
 		$queryContent=<<<EOD
-SELECT r.ref, h.hotelname, r.room_class, r.count, b.checkin, b.checkout
+SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.checkin, b.checkout
 FROM reserve r, hotel h, booking b
 WHERE h.hotelid=r.hotelid AND r.ref=b.ref
 ORDER BY b.checkin ASC;
