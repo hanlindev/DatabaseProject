@@ -482,7 +482,6 @@ FROM ($findRoomCountQuery) AS ro
 LEFT JOIN ($findReserveCountQuery) AS re
 ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = re.bed_size AND ro.no_bed = re.no_bed;
 EOD;
-		echo "$joinResults";//for debugging
 		$this->queueQuery($joinResults);
 	}
 	/**
