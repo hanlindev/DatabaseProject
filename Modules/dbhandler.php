@@ -631,7 +631,7 @@ EOD;
 	 */
 	public function cancelOrder($ref, $email, $isAdmin) {
 		try {
-			$uid = ($isAdmin)? "": " AND b.uid=$uid";
+			$uid = ($isAdmin)? "": " AND b.uid=$email";
 			$query = "UPDATE booking SET status='cancelled' WHERE ref='$ref' $uid;";
 			$this->queueQuery($query);
 			$rv = $this->sendQueries();
@@ -645,5 +645,33 @@ EOD;
 			return false;
 		}
 	}
+
+	/**
+	 * modifyDate
+	 * @param ref
+	 * @param email
+	 * @param isAdmin
+	 * @param checkin
+	 * @param checkout
+	 * the security feature is the same as cancelBook method
+	 */
+	public function modifyDate($ref, $email, $isAdmin, $checkin, $checkout) {
+		try {
+			$uid = ($isAdmin)? "": " AND b.uid=$email";
+			$set = "checkin=$checkin, checkout=$checkout";
+			$where = "ref='$ref' $uid";
+			$this->updateBooking($set, $where);
+			$rv = $this->sendQueries();
+			$rv = $rv[0];
+			if ($rv == 0) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch(Exception $e) {
+			return false;
+		}
+	}
+
 }
 ?>
