@@ -30,9 +30,13 @@ include ('pageaccess.php');
 	<div id="about">
 		<h2>Our Group</h2>
 
-		<h3>We Have Five Members</h3>
-		<p>Write something here</p>
-
+		<h3>CS2102 Project Group 8</h3>
+		<p>We are a group of five students from NUS~</p>
+		<p>Chen Xi</p>
+		<p>Cui Wei</p>
+		<p>Han Lin</p>
+		<p>Liu Tuo</p>
+		<p>Zhang Yue</p>
 	</div>
 </div>
 </body>
