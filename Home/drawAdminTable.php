@@ -59,7 +59,7 @@ function drawTable()
 			<td>$checkin_date</td>
 			<td>$checkout_date</td>
 			<td>
-				<button onclick=\"location.href=cancelbook.php?ref=".$ref.'\">Cancel Booking</button>
+				<button onclick=\"location.href='cancelbook.php?ref=".$ref.'\'">Cancel Booking</button>
 			</td>
 		</tr>
 		';
