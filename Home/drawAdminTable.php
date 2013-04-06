@@ -4,7 +4,7 @@ require 'valuenamemapping.php';
 	
 function drawTable()
 {
-	$dbh = new new dbhandler();
+	$dbh = new dbhandler();
 	$booking = $dbh->findAllBooking();
 ;
 
@@ -34,7 +34,7 @@ function drawTable()
 	<tbody>
 		";
 		foreach($booking as $row) {
-
+			$uid=$row['uid'];
 			$ref=$row['ref'];
 			$hotel_name = $row['hotelname'];
 			$room_class=$row['room_class'];

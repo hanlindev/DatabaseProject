@@ -527,7 +527,7 @@ EOD;
 		$ref = "'$ref'";
 		
 		// Queue insert into booking query
-		$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "'success'");
+		$this->insertIntoBooking($ref, $userid, $checkin, $checkout, "'successful'");
 
 		// Queue insert into reserve query
 		$this->insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving);
@@ -564,8 +564,8 @@ EOD;
 	public function topTen() {
 		$query = <<<EOD
 SELECT r.hotelid, h.hotelname, r.room_class, r.bed_size, r.no_bed, SUM(r.count) AS totalCount
-FROM reserve r, hotel h
-WHERE r.hotelid=h.hotelid
+FROM reserve r, hotel h, booking b
+WHERE r.hotelid=h.hotelid AND b.ref=r.ref AND b.status='successful'
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
 ORDER BY SUM(r.count) DESC;
 EOD;
@@ -593,7 +593,7 @@ EOD;
 	 */
 	public function findAllBookingByEmail($email) {
 		$queryContent=<<<EOD
-SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.checkin, b.checkout
+SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.checkin, b.checkout, b.status
 FROM reserve r, hotel h, booking b
 WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='$email'
 ORDER BY b.checkin ASC;
@@ -610,7 +610,7 @@ EOD;
 	 */
 	public function findAllBooking() {
 		$queryContent=<<<EOD
-SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.checkin, b.checkout
+SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.uid, b.checkin, b.checkout, b.status
 FROM reserve r, hotel h, booking b
 WHERE h.hotelid=r.hotelid AND r.ref=b.ref
 ORDER BY b.checkin ASC;
@@ -619,6 +619,21 @@ EOD;
 		$rv = $this->sendQueries();
 		$rv = $rv[0];
 		return $rv;
+	}
+
+	/**
+	 * cancelBook
+	 * @param ref the reference number of the booking we are going to cancel
+	 * @param email the uid field of the booking record
+	 * @param isAdmin whether the user that is attempting to remove the record
+	 *        is an administrator. If he is, he can cancel any record. Otherwise
+	 *        he can only cancel the record with his own email as uid
+	 */
+	public function cancelOrder($ref, $email, $isAdmin) {
+		$uid = ($isAdmin)? "", " AND b.uid=$uid";
+		$query = "UPDATE booking SET status='cancelled' WHERE ref='$ref' $uid;";
+		$this->queueQuery($query);
+		$this->sendQueries();
 	}
 }
 ?>
