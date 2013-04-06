@@ -477,11 +477,12 @@ $timeCondition
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
 EOD;
 		$joinResults = <<<EOD
-SELECT ro.hotelid, ro.room_class, ro.bed_size, ro.no_bed, ro.room_count, ro.room_count - re.rCount AS availability
+SELECT ro.hotelid, ro.hotelname, ro.room_class, ro.bed_size, ro.no_bed, ro.room_count, ro.room_count - re.rCount AS availability
 FROM ($findRoomCountQuery) AS ro
 LEFT JOIN ($findReserveCountQuery) AS re
 ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = re.bed_size AND ro.no_bed = re.no_bed;
 EOD;
+		echo "$joinResults";//for debugging
 		$this->queueQuery($joinResults);
 	}
 	/**
