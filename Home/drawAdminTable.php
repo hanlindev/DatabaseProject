@@ -5,8 +5,17 @@ require 'valuenamemapping.php';
 function drawTable()
 {
 	$dbh = new dbhandler();
-	$booking = $dbh->findAllBooking();
-;
+	try {
+		$booking = $dbh->
+findAllBooking();
+	}
+	catch(Exception $e){
+				echo "
+<h3>No Booking</h3>
+";
+		return;
+	}
+
 
 	if (empty($booking)){
 		echo "
@@ -16,7 +25,7 @@ function drawTable()
 	}
 	else {
 		echo "
-		<h3>Booking List For All Users</h3>
+<h3>Booking List For All Users</h3>
 <table id=\"booking_list\">
 	<thread>
 		<tr>

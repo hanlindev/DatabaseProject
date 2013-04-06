@@ -985,11 +985,11 @@ body
 	font-size: 12px;
 	background: #fff;
 	margin: 45px;
-	width: 480px;
+	width: 780px;
 	border-collapse: collapse;
 	text-align: left;
 	position:absolute;
-	top:10%;
+	top:30%;
     left:30%;
 }
 #search_result th
@@ -1079,4 +1079,3 @@ body
 	color: #339;
 	background: #d0dafd;
 }
-
