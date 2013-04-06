@@ -458,13 +458,13 @@ HAVING f.room_count > (
 	SELECT SUM(r.count)
 	FROM reserve r, booking b
 	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
-	AND r.no_bed=f.no_bed AND r.ref=b.ref $timeCondition)
+	AND r.no_bed=f.no_bed AND r.ref=b.ref AND b.status='successful' $timeCondition)
 UNION
 $roomConditions AND NOT EXISTS(
 	SELECT *
 	FROM reserve r, booking b
 	WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size AND
-			r.no_bed=f.no_bed AND r.ref=b.ref $timeCondition)
+			r.no_bed=f.no_bed AND r.ref=b.ref AND b.status='successful' $timeCondition)
 EOD;
 		
 		// Get reserved number of rooms of the same type
@@ -472,7 +472,7 @@ EOD;
 SELECT SUM(r.count) as rCount, r.hotelid, r.room_class, r.bed_size, r.no_bed
 FROM facility f, reserve r, booking b
 WHERE r.hotelid=f.hotelid AND r.room_class=f.room_class AND r.bed_size=f.bed_size
-AND r.no_bed=f.no_bed AND r.ref=b.ref
+AND r.no_bed=f.no_bed AND r.ref=b.ref AND b.status='successful'
 $timeCondition
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
 EOD;
