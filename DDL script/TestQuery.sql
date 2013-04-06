@@ -47,3 +47,9 @@ ON ro.hotelid = re.hotelid AND ro.room_class = re.room_class AND ro.bed_size = r
 insert into booking values(0000002, 'hanlin.ta@gmail.com', 'successful', '2013-03-20', '2013-03-25');
 
 insert into reserve values(0000002, 1, 1, 3, 1, 10);
+
+SELECT r.hotelid, h.hotelname, r.room_class, r.bed_size, r.no_bed, SUM(r.count)
+FROM reserve r, hotel h
+WHERE r.hotelid=h.hotelid
+GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
+ORDER BY SUM(r.ref) ASC;

@@ -151,8 +151,6 @@ include ('pageaccess.php');
 						<th>Room Class</th>
 						<th>Bed Size</th>
 						<th>No of Beds</th>
-						<th>Availability</th>
-						<th>Total Room</th>
 					</tr>
 				</thread>
 				<tbody>

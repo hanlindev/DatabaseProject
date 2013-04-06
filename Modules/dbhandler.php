@@ -555,5 +555,36 @@ EOD;
 			substr(time(),-5).substr(microtime(),2,5).sprintf('%02d',rand(0,99));
 		return $order_sn;
 	}
+
+		/**
+	 * topTen
+	 * return an array of information of the top 10 booked hotels. The array is in the same format as
+	 * that returned by the findAvailability method.
+	 */
+	public function topTen() {
+		$query = <<<EOD
+SELECT r.hotelid, h.hotelname, r.room_class, r.bed_size, r.no_bed, SUM(r.count) AS totalCount
+FROM reserve r, hotel h
+WHERE r.hotelid=h.hotelid
+GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
+ORDER BY SUM(r.count) DESC;
+EOD;
+		$this->queueQuery($query);
+		$result = $this->sendQueries();
+		$result = $result[0];
+		$rv = array();
+		$index = 0;
+		foreach ($result AS $rowIndex => $row) {
+			if ($rowIndex == 10) {
+				break;
+			} else {
+				array_push($rv, $row);
+			}
+		}
+
+		return $rv;
+	}
+
+	
 }
 ?>
