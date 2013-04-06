@@ -4,7 +4,7 @@
 
 	$ref = $_POST['ref'];
 	$dbh = new $dbhandler();
-	if ($dbh->){
+	if ($dbh->cancelbook($ref, $email, $isAdmin)){
 		echo "<br/>Order $ref has been succesfully canceled<br/>";
 	}
 	else {

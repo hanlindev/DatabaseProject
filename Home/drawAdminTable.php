@@ -16,6 +16,7 @@ public function drawTable()
 	}
 	else {
 		echo "
+		<h3>Booking List For All Users</h3>
 <table>
 	<thread>
 		<tr>
