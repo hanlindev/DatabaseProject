@@ -33,6 +33,7 @@ include ('pageaccess.php');
 		<thread>
 			<tr>
 				<th>Hotel ID</th>
+				<th>Hotel Name</th>
 				<th>Availability</th>
 				<th>Room Class</th>
 				<th>Bed Size</th>
@@ -93,8 +94,13 @@ $hotelFeatures = dbhandler::getAssocArray('sustain_certified', $sustain, 'aircon
 $bookingInfo = dbhandler::getAssocArray('checkin', $checkin_date, 'checkout', $checkout_date);
 
 $dbh = new dbhandler();
-$hotels = $dbh->
+try {
+	$hotels = $dbh->
 			findAvailableRooms($hotelInfo, $roomInfo, $hotelFeatures, $bookingInfo);
+}
+catch (Exception $e){
+	return;
+}
 
 /*-----  End of Call Search Function From dbhandler  ------*/
 
@@ -124,6 +130,7 @@ if (!$hotels) {
 			echo "
 					<tr>
 				<td>$hotelid</td>
+				<td>$hotelname</td>
 				<td>$availability</td>
 				<td>$room_class_name</td>
 				<td>$bed_size_name</td>

@@ -985,11 +985,11 @@ body
 	font-size: 12px;
 	background: #fff;
 	margin: 45px;
-	width: 480px;
+	width: 780px;
 	border-collapse: collapse;
 	text-align: left;
 	position:absolute;
-	top:10%;
+	top:30%;
     left:30%;
 }
 #search_result th
@@ -1045,4 +1045,37 @@ body
 	position: absolute;
 
 	left: 50%;
+}
+
+#booking_list
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	margin: 45px;
+	width: 480px;
+	text-align: left;
+	border-collapse: collapse;
+	border: 1px solid #69c;
+}
+#booking_list th
+{
+	padding: 15px 10px 10px 10px;
+	font-weight: normal;
+	font-size: 14px;
+	color: #039;
+}
+#booking_list tbody
+{
+	background: #e8edff;
+}
+#booking_list td
+{
+	padding: 10px;
+	color: #669;
+	border-top: 1px dashed #fff;
+}
+#booking_list tbody tr:hover td
+{
+	color: #339;
+	background: #d0dafd;
 }

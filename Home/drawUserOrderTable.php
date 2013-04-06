@@ -16,7 +16,7 @@ function drawTable($email)
 	}
 	else {
 		echo "
-<table>
+<table id=\"booking_list\">
 	<thread>
 		<tr>
 			<th>Ref No</th>
