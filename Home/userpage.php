@@ -18,7 +18,7 @@ include ('pageaccess.php');
 				<a href="home.php" id="home">Home</a>
 			</li>
 			<li>
-				<a href="#" id="email">Email</a>
+				<a href="about.php" id="email">Email</a>
 			</li>
 			<li>
 				<a href="userpage.php" id="user">My Account</a>
@@ -41,7 +41,7 @@ include ('pageaccess.php');
 				</form>
 			</div>
 			<div>
-				<h3>My booking history</h3>
+
 				<?php 
 					//use php code to get the list of all bookings
 					if ($isAdmin) {
