@@ -17,7 +17,7 @@ function drawTable()
 	else {
 		echo "
 		<h3>Booking List For All Users</h3>
-<table>
+<table id=\"booking_list\">
 	<thread>
 		<tr>
 			<th>Ref No</th>

@@ -21,7 +21,7 @@ function clear($message)
 }
 if(!$_SESSION['login'])
 {
-	header('Location: index.html');
+	header('Location: ../index.html');
 	exit;
 }
 else
@@ -42,12 +42,12 @@ else
 		$isAdmin = $row['isAdmin'];
 		echo "You are admin";
 		echo '
-<a href="checklogin?log=off">log off</a>
+<a href="checklogin.php?log=off">log off</a>
 ';
 	}
 	else 
 	{
-		header('Location: index.html');
+		header('Location: ../index.html');
 		exit;
 	}
 }
