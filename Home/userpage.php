@@ -44,7 +44,14 @@ include ('pageaccess.php');
 				<h3>My booking history</h3>
 				<?php 
 					//use php code to get the list of all bookings
-						
+					if ($isAdmin) {
+						require 'drawAdminTable.php';
+						drawTable();
+					} else {
+						require 'drawUserOrderTable.php';
+						drawTable($email);
+					}
+					
 			?></div>
 		</div>
 </div>
