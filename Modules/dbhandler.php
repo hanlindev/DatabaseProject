@@ -565,7 +565,7 @@ EOD;
 		$query = <<<EOD
 SELECT r.hotelid, h.hotelname, r.room_class, r.bed_size, r.no_bed, SUM(r.count) AS totalCount
 FROM reserve r, hotel h
-WHERE r.hotelid=h.hotelid AND b.ref=r.ref
+WHERE r.hotelid=h.hotelid
 GROUP BY r.hotelid, r.room_class, r.bed_size, r.no_bed
 ORDER BY SUM(r.count) DESC;
 EOD;
