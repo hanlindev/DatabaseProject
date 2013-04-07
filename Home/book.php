@@ -51,19 +51,33 @@ echo 'no_reserving'.$no_reserving."\n";
 
 $dbh = new dbhandler();
 try {
-	$ref = isset($_SESSION['ref']) ? $_SESSION['ref'] : NULL;
+	$ref = NULL;
+	$isNewRef = TRUE;
+	$count = 0;
 
-	if(isset($_SESSION['checkin_date'])&&isset($_SESSION['checkout_date'])&&strcmp($_SESSION['checkin_date'], $checkin_date)&&strcmp($_SESSION['checkout_date'], $checkout_date)){
-		$ref = NULL;
+	if (isset($_SESSION['book'])){
+		foreach ($_SESSION['book'] as $book) {
+			if (!strcmp($book['checkin_date'], $checkin_date)&&!strcmp($book['checkout_date'], $checkout_date)){
+				$ref = $book['ref'];
+				$isNewRef = FALSE;
+			}
+			$count++;
+		}
 	}
+
+	//if(isset($_SESSION['ref'])&&isset($_SESSION['checkin_date'])&&isset($_SESSION['checkout_date'])&&!strcmp($_SESSION['checkin_date'], $checkin_date)&&!strcmp($_SESSION['checkout_date'], $checkout_date)){
+	//	$ref = $_SESSION['ref'];
+	//}
 	
 	if (!is_null($ref = $dbh->placeBooking( $email, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin_date, $checkout_date, $ref))){
 		echo '<br/>Your booking has been successully placed<br/>';
 		echo 'You Have booked '.$no_reserving.' '.getRoomClassName($room_class).' rooms with '.$no_bed.' '.getBedSizeName($bed_size).' beds in .'.$hotelname."<br/>";
 		echo '<a href=home.php>Click Here To Go Back To Home Page</a>'."<br/>";
-		$_SESSION['ref']           = $ref;
-		$_SESSION['checkin_date']  =$checkin_date;
-		$_SESSION['checkout_date'] =$checkout_date;
+		if ($isNewRef){
+			$_SESSION['book'][$count]['ref']           = $ref;
+			$_SESSION['book'][$count]['checkin_date']  =$checkin_date;
+			$_SESSION['book'][$count]['checkout_date'] =$checkout_date;
+		}
 	}
 	else {
 		echo '<br/>Your booking has failed! <br/>';
