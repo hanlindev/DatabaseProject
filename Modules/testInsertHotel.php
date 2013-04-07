@@ -6,10 +6,10 @@
 
 	$dbh = new dbhandler();
 
-	$username = $_POST['username'];
-	$password = $_POST['password'];
-	$name = '\''.$_POST['name'].'\'';
-	$location = '\''.$_POST['location'].'\'';
+	$hotelname = '\''.$_POST['hotelname'].'\'';
+	$country = '\''.$_POST['country'].'\'';
+	$city='\''.$_POST['city'].'\'';
+	$street = '\''.$_POST['street'].'\'';
 	$star = $_POST['star'];
 	$sustain = $_POST['sustain'];
 	$aircon = $_POST['aircon'];

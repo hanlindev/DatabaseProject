@@ -279,6 +279,10 @@ class dbhandler {
 		return $this->deleteFromTable("reserve", $constraints);
 	}
 
+	public function deleteFromUser($constraints) {
+		return $this->deleteFromTable("reserve", $constraints);
+	}
+
 	//--------------------------Modify Query-------------------------------------------
 	/**
 	 * updateTable
@@ -378,13 +382,17 @@ class dbhandler {
 		return $this->updateTable("reserve", $set, $where);
 	}
 
+	public function updateUser($set, $where) {
+		return $this->updateTable("user", $set, $where);
+	}
+
 	//----------------------Select Queries--------------------------------------
 	/**
 	 * selectFromTable
 	 * this is too usage-oriented so no specialized method
 	 */
-	public function selectFromTable($select, $from, $where, $groupby) {
-		$queryContent = "SELECT $select FROM $from WHERE $where GROUP BY $groupby";
+	public function selectFromTable($select, $from, $where) {
+		$queryContent = "SELECT $select FROM $from WHERE $where;";
 		return $this->queueQuery($queryContent);
 	}
 
