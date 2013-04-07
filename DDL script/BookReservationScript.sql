@@ -1,8 +1,6 @@
-/* Unfortunately, mysql doesn't support check, to save time we don't use check
-at all, so implement all checking in server end php scripts. :-O for the sake
-of easy references, CHECK constraints are still written below but they won't be
-parsed. sigh */
-/* Schema */
+/* Unfortunately, mysql doesn't support check but for the sake
+of easy references, CHECK constraints are still written below 
+but they won't be parsed.*/
 CREATE TABLE hotel(
 hotelid INT PRIMARY KEY AUTO_INCREMENT,
 hotelname VARCHAR(128) NOT NULL,
@@ -36,7 +34,7 @@ no_bed INT CHECK(no_bed > 0),
 room_desc VARCHAR(256),
 room_count INT CHECK(room_count > 0),
 PRIMARY KEY(hotelid, room_class, bed_size, no_bed),
-FOREIGN KEY(hotelid) REFERENCES hotel(hotelid) ON DELETE CASCADE);
+FOREIGN KEY(hotelid) REFERENCES hotel(hotelid) ON DELETE CASCADE ON UPDATE CASCADE);
 
 CREATE TABLE user(
 email VARCHAR(60) PRIMARY KEY CHECK(email != '' AND email LIKE '%@%'),
@@ -61,4 +59,5 @@ no_bed INT,
 count INT DEFAULT 1 NOT NULL CHECK(count > 0),
 FOREIGN KEY(ref)  REFERENCES booking(ref) ON DELETE CASCADE,
 FOREIGN KEY(hotelid, room_class, bed_size, no_bed) 
-REFERENCES facility(hotelid, room_class, bed_size, no_bed) ON DELETE SET NULL);
+REFERENCES facility(hotelid, room_class, bed_size, no_bed) ON UPDATE CASCADE ON DELETE SET NULL);
+

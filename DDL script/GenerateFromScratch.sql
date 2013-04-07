@@ -1,13 +1,13 @@
 /* Generate everything */
 
 /* First clear all data */
-/*
+
 DROP TABLE reserve;
 DROP TABLE booking;
 DROP TABLE user;
 DROP TABLE facility;
 DROP TABLE hotel;
-*/
+
 /* Second create the tables */
 CREATE TABLE hotel(
 hotelid INT PRIMARY KEY AUTO_INCREMENT,
@@ -42,7 +42,7 @@ no_bed INT CHECK(no_bed > 0),
 room_desc VARCHAR(256),
 room_count INT CHECK(room_count > 0),
 PRIMARY KEY(hotelid, room_class, bed_size, no_bed),
-FOREIGN KEY(hotelid) REFERENCES hotel(hotelid) ON DELETE CASCADE);
+FOREIGN KEY(hotelid) REFERENCES hotel(hotelid) ON DELETE CASCADE ON UPDATE CASCADE);
 
 CREATE TABLE user(
 email VARCHAR(60) PRIMARY KEY CHECK(email != '' AND email LIKE '%@%'),
@@ -67,7 +67,7 @@ no_bed INT,
 count INT DEFAULT 1 NOT NULL CHECK(count > 0),
 FOREIGN KEY(ref)  REFERENCES booking(ref) ON DELETE CASCADE,
 FOREIGN KEY(hotelid, room_class, bed_size, no_bed) 
-REFERENCES facility(hotelid, room_class, bed_size, no_bed) ON DELETE SET NULL);
+REFERENCES facility(hotelid, room_class, bed_size, no_bed) ON UPDATE CASCADE ON DELETE SET NULL);
 
 
 
