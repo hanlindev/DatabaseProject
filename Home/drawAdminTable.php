@@ -1,7 +1,12 @@
 <?php
 require '../Modules/dbhandler.php';
 require 'valuenamemapping.php';
-	
+
+/**
+ * Draw a table that list all the orders for all users
+ * @author Liu    Tuo
+ * @return void 
+ */
 function drawTable()
 {
 	$dbh = new dbhandler();
@@ -97,7 +102,11 @@ findAllBooking();
 </table>
 ";
 }
-
+/**
+ * Draw a table that list all the canceled bookings for all users
+ * @author Liu    Tuo
+ * @return void 
+ */
 function drawCancelledOrderTable(){
 		$dbh = new dbhandler();
 	try {
@@ -171,5 +180,21 @@ findAllCanceledBooking();
 	</tbody>
 </table>
 ";
+}
+
+function phpmyadmin(){
+	echo "<h3>Go To Database Management Page</h3>";
+	echo "<form id=\"gotopphpmyadmin\"method=\"post\" action=\"../phpMyAdmin/index.php\" name=\"login_form\" target=\"_top\" class=\"login\">
+        
+            <input type=\"hidden\" name=\"pma_username\" id=\"input_username\" value=\"root\" size=\"24\" class=\"textfield\">
+        
+        
+            <input type=\"hidden\" name=\"pma_password\" id=\"input_password\" value=\"\" size=\"24\" class=\"textfield\">
+     
+        <input type=\"hidden\" name=\"server\" value=\"1\">   
+  
+        <input value=\"Go\" type=\"submit\" id=\"input_go\">
+    <input type=\"hidden\" name=\"token\" value=\"a08e83ccf5781a8aca106fa56f988664\"> 
+</form>";
 }
 ?>
