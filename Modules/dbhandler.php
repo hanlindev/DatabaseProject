@@ -608,17 +608,51 @@ EOD;
 		return $rv;
 	}
 
+	public function findAllBookingByEmail($email) {
+		try {
+			return $this->findAllBookingByEmailStatus($email, "successful");
+		} catch(Exception $e) {
+			return array();
+		}
+	}
+
+	public function findAllBooking() {
+		try {
+			return $this->findAllBookingByStatus("successful");
+		} catch(Exception $e) {
+			return array();
+		}
+	}
+
+	public function findAllCanceledBookingByEmail($email) {
+		try {
+			return $this->findAllBookingByEmailStatus($email, "cancelled");
+		} catch(Exception $e) {
+			return array();
+		}
+	}
+
+	public function findAllCanceledBooking() {
+		try {
+			return $this->findAllBookingByStatus("cancelled");
+		} catch(Exception $e) {
+			return array();
+		}
+	}
+
+
 	/**
-	 * findAllBooking
+	 * findAllBookingByEmailStatus
 	 * @param email is the primary key of the user table
+	 * @param status is the status you are looking for
 	 * @return an array of all bookings' information including
 	 *         ref, hotelname, room_class, no_reserving, checkin, checkout
 	 */
-	public function findAllBookingByEmail($email) {
+	private function findAllBookingByEmailStatus($email, $status) {
 		$queryContent=<<<EOD
 SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.checkin, b.checkout, b.status
 FROM reserve r, hotel h, booking b
-WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='$email' AND b.status='successful'
+WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.uid='$email' AND b.status='$status'
 ORDER BY b.checkin ASC;
 EOD;
 		$this->queueQuery($queryContent);
@@ -628,14 +662,14 @@ EOD;
 	}
 
 	/**
-	 * findAllBooking
+	 * findAllBookingByStatus
 	 * @return an array of all booking records
 	 */
-	public function findAllBooking() {
+	private function findAllBookingByStatus($status) {
 		$queryContent=<<<EOD
 SELECT r.ref, h.hotelname, r.room_class, r.bed_size, r.no_bed, r.count, b.uid, b.checkin, b.checkout, b.status
 FROM reserve r, hotel h, booking b
-WHERE h.hotelid=r.hotelid AND r.ref=b.ref
+WHERE h.hotelid=r.hotelid AND r.ref=b.ref AND b.status='$status'
 ORDER BY b.checkin ASC;
 EOD;
 		$this->queueQuery($queryContent);
