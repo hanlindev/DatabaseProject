@@ -10,7 +10,16 @@ include ('pageaccess.php');
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<title>Room Booking System</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<link href="ui/css/redmond/jquery-ui-1.10.2.custom.css" rel="stylesheet">
+	<script src="ui/js/jquery-1.9.1.js"></script>
+	<script src="ui/js/jquery-ui-1.10.2.custom.js"></script>
+	<script>
+	$(function() {
+		$( ".datepicker" ).datepicker({
+			dateFormat: "yy-mm-dd"
+		});
+	});
+	</script>
 </head>
 <body>
 	<div id="header">
@@ -134,9 +143,9 @@ include ('pageaccess.php');
 						<input type="hidden" name="tennis" value="0">
 						<input type="checkbox" name="tennis" value="1"></span>
 					Check In Date:
-					<input id="date" name="checkin_date" type="date" />
+					<input id="indate" name="checkin_date" type="text" class="datepicker" readonly="readonly"/>
 					Check Out Date:
-					<input id="date" name="checkout_date" type="date" />
+					<input id="outdate" name="checkout_date" type="text" class="datepicker" readonly="readonly"/>
 					<input id="search" type="submit" value=""/>
 
 				</form>
