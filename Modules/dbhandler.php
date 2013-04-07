@@ -279,10 +279,6 @@ class dbhandler {
 		return $this->deleteFromTable("reserve", $constraints);
 	}
 
-	public function deleteFromUser($constraints) {
-		return $this->deleteFromTable("reserve", $constraints);
-	}
-
 	//--------------------------Modify Query-------------------------------------------
 	/**
 	 * updateTable
@@ -380,10 +376,6 @@ class dbhandler {
 	 */
 	public function updateReserve($set, $where) {
 		return $this->updateTable("reserve", $set, $where);
-	}
-
-	public function updateUser($set, $where) {
-		return $this->updateTable("user", $set, $where);
 	}
 
 	//----------------------Select Queries--------------------------------------

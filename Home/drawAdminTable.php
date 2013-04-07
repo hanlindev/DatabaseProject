@@ -194,7 +194,7 @@ function phpmyadmin(){
         <input type=\"hidden\" name=\"server\" value=\"1\">   
   
         <input value=\"Go\" type=\"submit\" id=\"input_go\">
-    <input type=\"hidden\" name=\"token\" value=\"a08e83ccf5781a8aca106fa56f988664\"> 
+    	<input type=\"hidden\" name=\"token\" value=\"19da615435e73d69f4a75462f44694f9\">
 </form>";
 }
 ?>
