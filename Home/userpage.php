@@ -47,9 +47,11 @@ include ('pageaccess.php');
 					if ($isAdmin) {
 						require 'drawAdminTable.php';
 						drawTable();
+						drawCancelledOrderTable();
 					} else {
 						require 'drawUserOrderTable.php';
-						drawTable($email, $isAdmin);
+						drawTable($email);
+						drawCancelledOrderTable($email);
 					}
 					
 			?></div>
