@@ -66,7 +66,6 @@ class dbhandler {
 				// Check query type
 				$queryType = $this->getQueryType($query);
 				$aResult;
-
 				if (strcmp($queryType, "SELECT") == 0) 
 				{
 					$aResult = $dbh->query($query);
@@ -88,6 +87,7 @@ class dbhandler {
 			$this->queryQueue = array();
 			return $queryResults;
 		} catch(Exception $e) {
+			$this->queryQueue = array();
 			$dbh->rollBack();
 			throw $e;
 		}
@@ -512,7 +512,7 @@ EOD;
 	 * @param hotelid, room_class, bed_size and no_bed together are the primary key of the facility table
 	 * @param no_reserving is the number of rooms of this type that the user is going to book
 	 * @param checkin and checkout are the dates when the user checkin and out
-	 * @return true if the booking is confirmed or false if it fails, most probably because there is no more vacancy
+	 * @return an array of booking info if the booking is confirmed or null if it fails, most probably because there is no more vacancy
 	 * It will take the information of the room and the booking as parameters. Then it will generate a ref from the id
 	 * and time of booking.
 	 */
@@ -535,8 +535,8 @@ EOD;
 			$userid = "'$userid'";
 			$checkin = "'$checkin'";
 			$checkout = "'$checkout'";
-			$ref = (is_null($aRef)) ? $this->generateRef() : $aRef;
-			$ref = "'$ref'";
+			$rawRef = (is_null($aRef)) ? $this->generateRef() : $aRef;
+			$ref = "'$rawRef'";
 			
 			// Queue insert into booking query
 			if (is_null($aRef)) {
@@ -547,12 +547,13 @@ EOD;
 			// Queue insert into reserve query
 			$this->insertIntoReserve($ref, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving);
 
-			$rv = $this->sendQueries();
+			$result = $this->sendQueries();
+
 			// Return result
-			if (empty($rv)) {
+			if (empty($result)) {
 				return NULL;
 			} else {
-				return $ref;
+				return $rawRef;
 			}
 		} catch(Exception $e) {
 			return NULL;
@@ -685,6 +686,7 @@ EOD;
 			// no_bed, count" all indexed by their attribute names
 			$facilitiesBooked = $this->getAllReservation($ref, $email);
 			$this->removeAllReservation($ref);
+			$this->updateBooking("checkin='$checkin', checkout='$checkout'", "ref='$ref'");
 
 			// Place the orders again with the new date and if anyone creates a conflict
 			// exception will be thrown and changes rolled back.
@@ -708,7 +710,7 @@ EOD;
 	 */
 	private function getAllReservation($ref, $email) {
 		try {
-			$query = "SELECT r.hotelid, r.room_class, r.bed_size, r.no_bed, r.count FROM reserve r, booking b WHERE r.ref='$ref' AND r.ref=b.ref AND b.uid='$email'";
+			$query = "SELECT r.hotelid, r.room_class, r.bed_size, r.no_bed, r.count FROM reserve r, booking b WHERE r.ref='$ref' AND r.ref=b.ref AND b.uid='$email';";
 			$this->queueQuery($query);
 			$rv = $this->sendQueries();
 			$rv = $rv[0];
@@ -724,6 +726,7 @@ EOD;
 	private function removeAllReservation($ref) {
 		$constraint = "ref='$ref'";
 		$this->deleteFromReserve($constraint);
+		$this->sendQueries();
 	}
 
 }

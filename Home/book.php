@@ -53,7 +53,7 @@ $dbh = new dbhandler();
 try {
 	$ref = isset($_SESSION['ref']) ? $_SESSION['ref'] : NULL;
 	
-	if (!is_null(($ref = $dbh->placeBooking( $email, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin_date, $checkout_date， $ref))){
+	if (!is_null($ref = $dbh->placeBooking($email, $hotelid, $room_class, $bed_size, $no_bed, $no_reserving, $checkin_date, $checkout_date, $ref))) {
 		echo '<br/>Your booking has been successully placed<br/>';
 		echo 'You Have booked '.$no_reserving.' '.getRoomClassName($room_class).' rooms with '.$no_bed.' '.getBedSizeName($bed_size).' beds in .'.$hotelname."<br/>";
 		echo '<a href=home.php>Click Here To Go Back To Home Page</a>'."<br/>";
