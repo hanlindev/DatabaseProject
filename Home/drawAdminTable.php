@@ -106,7 +106,7 @@ findAllCanceledBooking();
 	}
 	catch(Exception $e){
 				echo "
-<h3>No Booking</h3>
+<h3>No Canceled Booking</h3>
 ";
 		return;
 	}
@@ -114,13 +114,13 @@ findAllCanceledBooking();
 
 	if (empty($booking)){
 		echo "
-<h3>No Booking</h3>
+<h3>No Canceled Booking</h3>
 ";
 		return;
 	}
 	else {
 		echo "
-<h3>Booking List For All Users</h3>
+<h3>Canceled Booking List For All Users</h3>
 <table id=\"booking_list\">
 	<thread>
 		<tr>
