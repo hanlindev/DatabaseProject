@@ -1014,7 +1014,8 @@ body
 {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 12px;
-	margin: 45px;
+	margin-top: 45px;
+	margin-left: 0px;
 	width: 480px;
 	text-align: center;
 	border-collapse: collapse;

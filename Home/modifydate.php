@@ -18,7 +18,7 @@
 	try {
 		$dbh = new dbhandler();
 		if ($dbh->modifyDate($ref, $email, $isAdmin, $checkIn, $checkOut)){
-			echo "<br/>Date of Order $ref has been succesfully canceled<br/>";
+			echo "<br/>Date of Order $ref has been succesfully changed<br/>";
 			echo "<br/>The New Check In Date is $checkIn";
 			echo "<br/>The New Check Out Date is $checkOut";
 		}
