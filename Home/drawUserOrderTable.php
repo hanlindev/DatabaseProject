@@ -85,11 +85,7 @@ findAllBookingByEmail($email);
 
 				<td>
 					<input type=\"submit\" name=\"submit\" value=\"modify date\"></td>
-
 				<input type=\"hidden\" value=\"".$ref."\" name=\"referenceNo\" />
-				<!-- 				<input type=\"hidden\" value=\"".$email."\" name=\"email\" />
-				<input type=\"hidden\" value=\"".$isAdmin."\" name=\"isAdmin\" />
-				-->
 				<input type=\"hidden\" value=\"".$checkin_date."\" name=\"new_Checkin_date\" />
 				<input type=\"hidden\" value=\"".$checkout_date."\" name=\"new_Checkout_date\" />
 			</form>
@@ -136,20 +132,20 @@ findAllCanceledBookingByEmail($email);
 		echo "
 <h3>Your Canceled Orders</h3>
 <table id=\"booking_list\">
-	<thread>
-		<tr>
-			<th>Ref No</th>
-			<th>Hotel Name</th>
-			<th>Room Class</th>
-			<th>Bed Size</th>
-			<th>No of Beds</th>
-			<th>No of Rooms Booked</th>
-			<th>Check In Date</th>
-			<th>Check Out Date</th>
-		</tr>
-	</thread>
-	<tbody>
-		";
+<thread>
+	<tr>
+		<th>Ref No</th>
+		<th>Hotel Name</th>
+		<th>Room Class</th>
+		<th>Bed Size</th>
+		<th>No of Beds</th>
+		<th>No of Rooms Booked</th>
+		<th>Check In Date</th>
+		<th>Check Out Date</th>
+	</tr>
+</thread>
+<tbody>
+	";
 		
 		foreach($booking as $row) {
 			$ref=$row['ref'];
@@ -164,15 +160,15 @@ findAllCanceledBookingByEmail($email);
 			$bed_size_name   = getBedSizeName($bed_size);
 
 			echo "
-		<tr>
-			<td>$ref</td>
-			<td>$hotel_name</td>
-			<td>$room_class_name</td>
-			<td>$bed_size_name</td>
-			<td>$no_bed</td>
-			<td>$no_reserving</td>
-			<td>$checkin_date</td>
-			<td>$checkout_date</td>
+	<tr>
+		<td>$ref</td>
+		<td>$hotel_name</td>
+		<td>$room_class_name</td>
+		<td>$bed_size_name</td>
+		<td>$no_bed</td>
+		<td>$no_reserving</td>
+		<td>$checkin_date</td>
+		<td>$checkout_date</td>
 	</tr>
 	";
 		}
