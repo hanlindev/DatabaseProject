@@ -98,7 +98,7 @@ findAllBooking();
 ";
 }
 
-drawCancelledOrderTable(){
+function drawCancelledOrderTable(){
 		$dbh = new dbhandler();
 	try {
 		$booking = $dbh->
