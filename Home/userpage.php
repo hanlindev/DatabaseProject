@@ -46,8 +46,10 @@ include ('pageaccess.php');
 					//use php code to get the list of all bookings
 					if ($isAdmin) {
 						require 'drawAdminTable.php';
+						phpmyadmin();
 						drawTable();
 						drawCancelledOrderTable();
+
 					} else {
 						require 'drawUserOrderTable.php';
 						drawTable($email);
