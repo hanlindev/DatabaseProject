@@ -49,7 +49,7 @@ include ('pageaccess.php');
 						drawTable();
 					} else {
 						require 'drawUserOrderTable.php';
-						drawTable($email);
+						drawTable($email, $isAdmin);
 					}
 					
 			?></div>
@@ -58,3 +58,54 @@ include ('pageaccess.php');
 
 </body>
 </html>
+	<script>
+	function echoValues(index){
+	
+	 var refNo = "referenceNo";
+	 var refValues = document.getElementsByName(refNo);
+	 var currentRafValue = refValues[index].value;
+	 
+	 
+	 var checkinDateName = "new_Checkin_date";
+	 var checkinDates = document.getElementsByName(checkinDateName);
+	 var currentcheckinDate = checkinDates[index].value;
+	 
+	 var checkoutDateName = "new_Checkout_date";
+	 var checkoutDates = document.getElementsByName(checkoutDateName);
+	 var currentcheckoutDate = checkoutDates[index].value;
+	 
+	 alert(currentRafValue + currentcheckinDate + currentcheckoutDate);
+	}
+	
+	function updateCheckInDate(element,index){
+	  
+		var date = element.value;
+		
+		var checkinDateName = "new_Checkin_date";
+		var checkinDates = document.getElementsByName(checkinDateName);
+		checkinDates[index].value = date;
+		
+	}
+	
+	function updateCheckOutDate(element,index){
+	  
+		var date = element.value;
+		
+		var checkinDateName = "new_Checkin_date";
+		var checkinDates = document.getElementsByName(checkinDateName);
+		checkinDates[index].value = date;
+		
+	}
+	
+	function updateCheckOutDate(element,index){
+	  
+		var date = element.value;
+		
+		var checkOutDateName = "new_Checkout_date";
+		var checkOutDates = document.getElementsByName(checkOutDateName);
+		checkOutDates[index].value = date;
+		
+	}
+	
+	
+	</script>
