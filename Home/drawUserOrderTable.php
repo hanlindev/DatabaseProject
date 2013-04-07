@@ -28,6 +28,7 @@ findAllBookingByEmail($email);
 	}
 	else {
 		echo "
+<h3>Booking List For All Users</h3>
 <table id=\"booking_list\">
 	<thread>
 		<tr>

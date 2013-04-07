@@ -151,7 +151,7 @@ include ('pageaccess.php');
 				</form>
 			</div>
 			<div id="pop_hotel_div">
-				<h2 id="poplistheader">Popular Hotel Rooms</h2>
+				<h3 >Popular Hotel Rooms</h3>
 				<table id="popular_search_table" summary="Top 10 Popular Hotel Rooms">
 					<thread>
 					<tr>
