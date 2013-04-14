@@ -3,3 +3,7 @@ INSERT INTO facility VALUES(1, 2, 3, 1, '', 100);
 INSERT INTO facility VALUES(1, 3, 3, 1, '', 100);
 INSERT INTO facility VALUES(1, 4, 3, 1, '', 100);
 INSERT INTO facility VALUES(2, 4, 1, 1, '', 100);
+INSERT INTO facility VALUES(2, 4, 2, 1, '', 100);
+INSERT INTO facility VALUES(2, 3, 3, 2, '', 100);
+INSERT INTO facility VALUES(3, 2, 2, 1, '', 100);
+INSERT INTO facility VALUES(3, 4, 4, 1, '', 100);

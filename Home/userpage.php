@@ -10,6 +10,16 @@ include ('pageaccess.php');
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<title>Room Booking System</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link href="ui/css/redmond/jquery-ui-1.10.2.custom.css" rel="stylesheet">
+	<script src="ui/js/jquery-1.9.1.js"></script>
+	<script src="ui/js/jquery-ui-1.10.2.custom.js"></script>
+	<script>
+	$(function() {
+		$(".datepicker").datepicker({
+			dateFormat: "yy-mm-dd"
+		});
+	});
+	</script>
 </head>
 <body>
 	<div id="header">

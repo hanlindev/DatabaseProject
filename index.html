@@ -4,44 +4,74 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<title>Room Booking System</title>
-	<link rel="stylesheet" href="Home/css/style.css" type="text/css" />
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<link rel="stylesheet" href="Home/css/loginstyle.css" type="text/css" />
+	<link href="Home/ui/css/redmond/jquery-ui-1.10.2.custom.css" rel="stylesheet">
+	<script src="Home/ui/js/jquery-1.9.1.js"></script>
+	<script src="Home/ui/js/jquery-ui-1.10.2.custom.js"></script>
+    <script>
+	$(function() {
+		$("#loginSignupTabs").tabs({
+			hide:"fade"
+		});
+	});
+	</script>
 </head>
 <body>
-	<div id="header">
-		<ul id="navigation">
-			<li>
-				<a href="index.html" id="home">Home</a>
-			</li>
-			<li>
-				<a href="about.html" id="email">Email</a>
-			</li>
-		</ul>
-		<p>CS2102 Project Group 8</p>
-		<div id="featured">
-			<div>
-				<h3>Sign In</h3>
-				<form method=post action="Home/checklogin.php">
-					<input id="email" name="email" type="text" value="User Email" size="15" />
-					<input id="password"name="password" type="password" value="Password" size="15" />
+	<div class="mainPage">
+		<h1>Groupate Hotel Booking</h2>
+		<div class="innerbox">
+		<div id="indexDescription">
+			<h3>Welcome to GHB!</h3>
+			<p>Overhere you can
+				<ul>
+					<li>Search and book hotels by lots of features.</li>
+					<li>Review the hotels and share with friends.(WIP feature)</li>
+				</ul>
+			</p>
+		</div>
+    	<div id="loginSignupTabs">
+        	<ul>
+            	<li>
+					<a href="#loginTab">I have an account</a>
+				</li>
+                <li>
+					<a href="#signupTab">I don't have an account</a>
+				</li>
+			</ul>
+			<div id="loginTab" class="center">
+				<form action="Home/checklogin.php" method="POST">
+					<input id="email" name="email" type="text" value="User Email" size="15"/><br/>
+					<input id="password"name="password" type="password" value="Password" size="15" /><br/>
 					<input type="submit" id="submit" name="submit" value="Log In" />
 				</form>
-				<button id="hidr">Don't Have An Account?Click Here to Sign Up</button>
-				<span>
-					<h3>Sign Up</h3>
-					<form action="Home/signup.php" method="post">
-						Username:
-						<input name="name" type="text" id="name" size="15" />
-						Email:
-						<input name="email" type="text" id="email" size="15" />
-						Password:
-						<input type="password" name="password" size="15" />
-						<input type="submit" name="submit" value="Sign Up" />
-					</form>
-				</span>
 			</div>
+			<div id="signupTab" class="center">
+				<form action="Home/signup.php" method="POST">
+					<table width="200" border="0" class="center">
+						<tr>
+							<td>Username:</td>
+							<td><input name="name" type="text" id="name" size="15" /></td>
+						</tr>
+						<tr>
+							<td>Email:</td>
+							<td><input name="email" type="text" id="email" size="15" /><br/></td>
+						</tr>
+						<tr>
+							<td>Password:</td>
+							<td><input type="password" name="password" size="15" /><br/></td>
+						</tr>
+						<tr class="center">
+							<td colspan="2"><input type="submit" name="submit" value="Sign Up" /></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+            </ul>
+        </div>
 		</div>
-	</div>
+    </div>
+                    
+	
 </body>
 </html>
 <script>

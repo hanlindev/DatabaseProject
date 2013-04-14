@@ -75,11 +75,11 @@ findAllBookingByEmail($email);
 			<td>
 				current check in date: ".$checkin_date.
 			"
-				<input name=\"checkin_date".$count."\" type=\"date\"  value =\"".$checkin_date."\" onchange=\"updateCheckInDate(this,".$count.")\"  ></td>
+				<input name=\"checkin_date".$count."\" type=\"text\"  value =\"".$checkin_date."\" onchange=\"updateCheckInDate(this,".$count.")\" readonly=\"readonly\" class=\"datepicker\"></td>
 			<td>
 				current check out date: ".$checkout_date.
 			"
-				<input name=\"checkout_date".$count."\" type=\"date\" value =\"".$checkout_date."\" onchange=\"updateCheckOutDate(this,".$count.")\"  ></td>
+				<input name=\"checkout_date".$count."\" type=\"text\" value =\"".$checkout_date."\" onchange=\"updateCheckOutDate(this,".$count.")\" readonly=\"readonly\" class=\"datepicker\"></td>
 
 			<form action = \"modifydate.php\" method = \"post\">
 

@@ -1,0 +1,86 @@
+body {
+	overflow-y: hidden;
+	text-align: left;
+	background:url(../images/bg-body.jpg) repeat-x center top #09154F;
+}
+
+.center{
+	text-align:center;
+}
+
+DIV.center {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div.tooltip { 
+	display: none; /* initially tooltips are hidden */
+	padding: 10px;
+	background: #222;
+	color: #fff;
+	font-size: 13px;
+	font-style: italic;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+FORM.center {
+	display: inline-block;
+	width: 80%;
+	margin: auto;
+}
+
+TABLE.center{
+	display: inline-block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#loginSignupTabs {
+	display: table-cell;
+	min-width:500px;
+	max-width:700px;
+	min-height:250px;
+	max-height:300px;
+}
+
+#indexDescription {
+	display: table-cell;
+	font-size: 17px;
+	text-align:left;
+}
+
+.heading{
+	height:82px;
+	background-color:#09F;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.mainPage {
+	text-align:center;
+	border-width:2px;
+	border-style:solid none none none;
+	border-color:#0094ff;
+    -moz-border-radius-topright:5px;
+    -moz-border-radius-topleft:5px;
+    -webkit-border-top-right-radius:5px;
+    -webkit-border-top-left-radius:5px;
+}
+.mainPage h1{
+	background:#0094ff;
+	height: 50px;
+	color:white;
+	padding:15px;
+	margin-top:-10px;
+	margin-left: -10px;
+	margin-right: -10px;
+}
+
+.innerbox{
+	display: table;
+	width: 900;
+	height: 500;
+	margin-left:auto;
+	margin-right:auto;
+}

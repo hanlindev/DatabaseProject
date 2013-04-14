@@ -1,7 +1,4 @@
-<?php
-//Check if the current user have the access to current page
-include ('pageaccess.php');
-?>
+
 
 <!DOCTYPE html>
 
@@ -13,6 +10,12 @@ include ('pageaccess.php');
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body>
+	<div style="text-align:left">
+		<?php
+			//Check if the current user have the access to current page
+			include ('pageaccess.php');
+		?>
+	</div>
 	<h1>Search Result</h1>
 	<div class="header">
 		<ul id="navigation">
